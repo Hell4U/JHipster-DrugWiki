@@ -1,8 +1,6 @@
 package com.promition.drugwiki.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +13,6 @@ import org.springframework.data.relational.core.mapping.Table;
 /**
  * The Company entity.\n@author A true hipster
  */
-@ApiModel(description = "The Company entity.\n@author A true hipster")
 @Table("company")
 public class Company implements Serializable {
 
@@ -28,7 +25,6 @@ public class Company implements Serializable {
      * fieldName
      */
     @NotNull(message = "must not be null")
-    @ApiModelProperty(value = "fieldName", required = true)
     @Column("name")
     private String name;
 

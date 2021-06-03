@@ -8,6 +8,8 @@ import com.promition.drugwiki.IntegrationTest;
 import com.promition.drugwiki.domain.Brand;
 import com.promition.drugwiki.repository.BrandRepository;
 import com.promition.drugwiki.service.EntityManager;
+import com.promition.drugwiki.service.dto.BrandDTO;
+import com.promition.drugwiki.service.mapper.BrandMapper;
 import java.time.Duration;
 import java.util.List;
 import java.util.Random;
@@ -46,6 +48,9 @@ class BrandResourceIT {
 
     @Autowired
     private BrandRepository brandRepository;
+
+    @Autowired
+    private BrandMapper brandMapper;
 
     @Autowired
     private EntityManager em;
@@ -100,11 +105,12 @@ class BrandResourceIT {
     void createBrand() throws Exception {
         int databaseSizeBeforeCreate = brandRepository.findAll().collectList().block().size();
         // Create the Brand
+        BrandDTO brandDTO = brandMapper.toDto(brand);
         webTestClient
             .post()
             .uri(ENTITY_API_URL)
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(TestUtil.convertObjectToJsonBytes(brand))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(brandDTO))
             .exchange()
             .expectStatus()
             .isCreated();
@@ -121,6 +127,7 @@ class BrandResourceIT {
     void createBrandWithExistingId() throws Exception {
         // Create the Brand with an existing ID
         brand.setId(1L);
+        BrandDTO brandDTO = brandMapper.toDto(brand);
 
         int databaseSizeBeforeCreate = brandRepository.findAll().collectList().block().size();
 
@@ -129,7 +136,7 @@ class BrandResourceIT {
             .post()
             .uri(ENTITY_API_URL)
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(TestUtil.convertObjectToJsonBytes(brand))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(brandDTO))
             .exchange()
             .expectStatus()
             .isBadRequest();
@@ -146,12 +153,13 @@ class BrandResourceIT {
         brand.setName(null);
 
         // Create the Brand, which fails.
+        BrandDTO brandDTO = brandMapper.toDto(brand);
 
         webTestClient
             .post()
             .uri(ENTITY_API_URL)
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(TestUtil.convertObjectToJsonBytes(brand))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(brandDTO))
             .exchange()
             .expectStatus()
             .isBadRequest();
@@ -174,8 +182,9 @@ class BrandResourceIT {
             .isOk()
             .expectHeader()
             .contentTypeCompatibleWith(MediaType.APPLICATION_NDJSON)
-            .returnResult(Brand.class)
+            .returnResult(BrandDTO.class)
             .getResponseBody()
+            .map(brandMapper::toEntity)
             .filter(brand::equals)
             .collectList()
             .block(Duration.ofSeconds(5));
@@ -257,12 +266,13 @@ class BrandResourceIT {
         // Update the brand
         Brand updatedBrand = brandRepository.findById(brand.getId()).block();
         updatedBrand.name(UPDATED_NAME).price(UPDATED_PRICE);
+        BrandDTO brandDTO = brandMapper.toDto(updatedBrand);
 
         webTestClient
             .put()
-            .uri(ENTITY_API_URL_ID, updatedBrand.getId())
+            .uri(ENTITY_API_URL_ID, brandDTO.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(TestUtil.convertObjectToJsonBytes(updatedBrand))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(brandDTO))
             .exchange()
             .expectStatus()
             .isOk();
@@ -280,12 +290,15 @@ class BrandResourceIT {
         int databaseSizeBeforeUpdate = brandRepository.findAll().collectList().block().size();
         brand.setId(count.incrementAndGet());
 
+        // Create the Brand
+        BrandDTO brandDTO = brandMapper.toDto(brand);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         webTestClient
             .put()
-            .uri(ENTITY_API_URL_ID, brand.getId())
+            .uri(ENTITY_API_URL_ID, brandDTO.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(TestUtil.convertObjectToJsonBytes(brand))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(brandDTO))
             .exchange()
             .expectStatus()
             .isBadRequest();
@@ -300,12 +313,15 @@ class BrandResourceIT {
         int databaseSizeBeforeUpdate = brandRepository.findAll().collectList().block().size();
         brand.setId(count.incrementAndGet());
 
+        // Create the Brand
+        BrandDTO brandDTO = brandMapper.toDto(brand);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         webTestClient
             .put()
             .uri(ENTITY_API_URL_ID, count.incrementAndGet())
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(TestUtil.convertObjectToJsonBytes(brand))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(brandDTO))
             .exchange()
             .expectStatus()
             .isBadRequest();
@@ -320,12 +336,15 @@ class BrandResourceIT {
         int databaseSizeBeforeUpdate = brandRepository.findAll().collectList().block().size();
         brand.setId(count.incrementAndGet());
 
+        // Create the Brand
+        BrandDTO brandDTO = brandMapper.toDto(brand);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         webTestClient
             .put()
             .uri(ENTITY_API_URL)
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(TestUtil.convertObjectToJsonBytes(brand))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(brandDTO))
             .exchange()
             .expectStatus()
             .isEqualTo(405);
@@ -400,12 +419,15 @@ class BrandResourceIT {
         int databaseSizeBeforeUpdate = brandRepository.findAll().collectList().block().size();
         brand.setId(count.incrementAndGet());
 
+        // Create the Brand
+        BrandDTO brandDTO = brandMapper.toDto(brand);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         webTestClient
             .patch()
-            .uri(ENTITY_API_URL_ID, brand.getId())
+            .uri(ENTITY_API_URL_ID, brandDTO.getId())
             .contentType(MediaType.valueOf("application/merge-patch+json"))
-            .bodyValue(TestUtil.convertObjectToJsonBytes(brand))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(brandDTO))
             .exchange()
             .expectStatus()
             .isBadRequest();
@@ -420,12 +442,15 @@ class BrandResourceIT {
         int databaseSizeBeforeUpdate = brandRepository.findAll().collectList().block().size();
         brand.setId(count.incrementAndGet());
 
+        // Create the Brand
+        BrandDTO brandDTO = brandMapper.toDto(brand);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         webTestClient
             .patch()
             .uri(ENTITY_API_URL_ID, count.incrementAndGet())
             .contentType(MediaType.valueOf("application/merge-patch+json"))
-            .bodyValue(TestUtil.convertObjectToJsonBytes(brand))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(brandDTO))
             .exchange()
             .expectStatus()
             .isBadRequest();
@@ -440,12 +465,15 @@ class BrandResourceIT {
         int databaseSizeBeforeUpdate = brandRepository.findAll().collectList().block().size();
         brand.setId(count.incrementAndGet());
 
+        // Create the Brand
+        BrandDTO brandDTO = brandMapper.toDto(brand);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         webTestClient
             .patch()
             .uri(ENTITY_API_URL)
             .contentType(MediaType.valueOf("application/merge-patch+json"))
-            .bodyValue(TestUtil.convertObjectToJsonBytes(brand))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(brandDTO))
             .exchange()
             .expectStatus()
             .isEqualTo(405);

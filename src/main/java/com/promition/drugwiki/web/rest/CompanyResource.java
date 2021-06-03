@@ -1,7 +1,8 @@
 package com.promition.drugwiki.web.rest;
 
-import com.promition.drugwiki.domain.Company;
 import com.promition.drugwiki.repository.CompanyRepository;
+import com.promition.drugwiki.service.CompanyService;
+import com.promition.drugwiki.service.dto.CompanyDTO;
 import com.promition.drugwiki.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
@@ -29,7 +29,6 @@ import tech.jhipster.web.util.reactive.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class CompanyResource {
 
     private final Logger log = LoggerFactory.getLogger(CompanyResource.class);
@@ -39,27 +38,30 @@ public class CompanyResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final CompanyService companyService;
+
     private final CompanyRepository companyRepository;
 
-    public CompanyResource(CompanyRepository companyRepository) {
+    public CompanyResource(CompanyService companyService, CompanyRepository companyRepository) {
+        this.companyService = companyService;
         this.companyRepository = companyRepository;
     }
 
     /**
      * {@code POST  /companies} : Create a new company.
      *
-     * @param company the company to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new company, or with status {@code 400 (Bad Request)} if the company has already an ID.
+     * @param companyDTO the companyDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new companyDTO, or with status {@code 400 (Bad Request)} if the company has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/companies")
-    public Mono<ResponseEntity<Company>> createCompany(@Valid @RequestBody Company company) throws URISyntaxException {
-        log.debug("REST request to save Company : {}", company);
-        if (company.getId() != null) {
+    public Mono<ResponseEntity<CompanyDTO>> createCompany(@Valid @RequestBody CompanyDTO companyDTO) throws URISyntaxException {
+        log.debug("REST request to save Company : {}", companyDTO);
+        if (companyDTO.getId() != null) {
             throw new BadRequestAlertException("A new company cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        return companyRepository
-            .save(company)
+        return companyService
+            .save(companyDTO)
             .map(
                 result -> {
                     try {
@@ -77,23 +79,23 @@ public class CompanyResource {
     /**
      * {@code PUT  /companies/:id} : Updates an existing company.
      *
-     * @param id the id of the company to save.
-     * @param company the company to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated company,
-     * or with status {@code 400 (Bad Request)} if the company is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the company couldn't be updated.
+     * @param id the id of the companyDTO to save.
+     * @param companyDTO the companyDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated companyDTO,
+     * or with status {@code 400 (Bad Request)} if the companyDTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the companyDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/companies/{id}")
-    public Mono<ResponseEntity<Company>> updateCompany(
+    public Mono<ResponseEntity<CompanyDTO>> updateCompany(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody Company company
+        @Valid @RequestBody CompanyDTO companyDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update Company : {}, {}", id, company);
-        if (company.getId() == null) {
+        log.debug("REST request to update Company : {}, {}", id, companyDTO);
+        if (companyDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, company.getId())) {
+        if (!Objects.equals(id, companyDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -105,8 +107,8 @@ public class CompanyResource {
                         return Mono.error(new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
                     }
 
-                    return companyRepository
-                        .save(company)
+                    return companyService
+                        .save(companyDTO)
                         .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
                         .map(
                             result ->
@@ -124,24 +126,24 @@ public class CompanyResource {
     /**
      * {@code PATCH  /companies/:id} : Partial updates given fields of an existing company, field will ignore if it is null
      *
-     * @param id the id of the company to save.
-     * @param company the company to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated company,
-     * or with status {@code 400 (Bad Request)} if the company is not valid,
-     * or with status {@code 404 (Not Found)} if the company is not found,
-     * or with status {@code 500 (Internal Server Error)} if the company couldn't be updated.
+     * @param id the id of the companyDTO to save.
+     * @param companyDTO the companyDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated companyDTO,
+     * or with status {@code 400 (Bad Request)} if the companyDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the companyDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the companyDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/companies/{id}", consumes = "application/merge-patch+json")
-    public Mono<ResponseEntity<Company>> partialUpdateCompany(
+    public Mono<ResponseEntity<CompanyDTO>> partialUpdateCompany(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody Company company
+        @NotNull @RequestBody CompanyDTO companyDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Company partially : {}, {}", id, company);
-        if (company.getId() == null) {
+        log.debug("REST request to partial update Company partially : {}, {}", id, companyDTO);
+        if (companyDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, company.getId())) {
+        if (!Objects.equals(id, companyDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -153,21 +155,7 @@ public class CompanyResource {
                         return Mono.error(new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
                     }
 
-                    Mono<Company> result = companyRepository
-                        .findById(company.getId())
-                        .map(
-                            existingCompany -> {
-                                if (company.getName() != null) {
-                                    existingCompany.setName(company.getName());
-                                }
-                                if (company.getAddress() != null) {
-                                    existingCompany.setAddress(company.getAddress());
-                                }
-
-                                return existingCompany;
-                            }
-                        )
-                        .flatMap(companyRepository::save);
+                    Mono<CompanyDTO> result = companyService.partialUpdate(companyDTO);
 
                     return result
                         .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
@@ -190,9 +178,9 @@ public class CompanyResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of companies in body.
      */
     @GetMapping("/companies")
-    public Mono<List<Company>> getAllCompanies() {
+    public Mono<List<CompanyDTO>> getAllCompanies() {
         log.debug("REST request to get all Companies");
-        return companyRepository.findAll().collectList();
+        return companyService.findAll().collectList();
     }
 
     /**
@@ -200,36 +188,36 @@ public class CompanyResource {
      * @return the {@link Flux} of companies.
      */
     @GetMapping(value = "/companies", produces = MediaType.APPLICATION_NDJSON_VALUE)
-    public Flux<Company> getAllCompaniesAsStream() {
+    public Flux<CompanyDTO> getAllCompaniesAsStream() {
         log.debug("REST request to get all Companies as a stream");
-        return companyRepository.findAll();
+        return companyService.findAll();
     }
 
     /**
      * {@code GET  /companies/:id} : get the "id" company.
      *
-     * @param id the id of the company to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the company, or with status {@code 404 (Not Found)}.
+     * @param id the id of the companyDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the companyDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/companies/{id}")
-    public Mono<ResponseEntity<Company>> getCompany(@PathVariable Long id) {
+    public Mono<ResponseEntity<CompanyDTO>> getCompany(@PathVariable Long id) {
         log.debug("REST request to get Company : {}", id);
-        Mono<Company> company = companyRepository.findById(id);
-        return ResponseUtil.wrapOrNotFound(company);
+        Mono<CompanyDTO> companyDTO = companyService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(companyDTO);
     }
 
     /**
      * {@code DELETE  /companies/:id} : delete the "id" company.
      *
-     * @param id the id of the company to delete.
+     * @param id the id of the companyDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/companies/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public Mono<ResponseEntity<Void>> deleteCompany(@PathVariable Long id) {
         log.debug("REST request to delete Company : {}", id);
-        return companyRepository
-            .deleteById(id)
+        return companyService
+            .delete(id)
             .map(
                 result ->
                     ResponseEntity

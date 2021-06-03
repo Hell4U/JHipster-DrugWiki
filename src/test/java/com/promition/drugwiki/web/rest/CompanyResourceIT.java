@@ -8,6 +8,8 @@ import com.promition.drugwiki.IntegrationTest;
 import com.promition.drugwiki.domain.Company;
 import com.promition.drugwiki.repository.CompanyRepository;
 import com.promition.drugwiki.service.EntityManager;
+import com.promition.drugwiki.service.dto.CompanyDTO;
+import com.promition.drugwiki.service.mapper.CompanyMapper;
 import java.time.Duration;
 import java.util.List;
 import java.util.Random;
@@ -46,6 +48,9 @@ class CompanyResourceIT {
 
     @Autowired
     private CompanyRepository companyRepository;
+
+    @Autowired
+    private CompanyMapper companyMapper;
 
     @Autowired
     private EntityManager em;
@@ -100,11 +105,12 @@ class CompanyResourceIT {
     void createCompany() throws Exception {
         int databaseSizeBeforeCreate = companyRepository.findAll().collectList().block().size();
         // Create the Company
+        CompanyDTO companyDTO = companyMapper.toDto(company);
         webTestClient
             .post()
             .uri(ENTITY_API_URL)
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(TestUtil.convertObjectToJsonBytes(company))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(companyDTO))
             .exchange()
             .expectStatus()
             .isCreated();
@@ -121,6 +127,7 @@ class CompanyResourceIT {
     void createCompanyWithExistingId() throws Exception {
         // Create the Company with an existing ID
         company.setId(1L);
+        CompanyDTO companyDTO = companyMapper.toDto(company);
 
         int databaseSizeBeforeCreate = companyRepository.findAll().collectList().block().size();
 
@@ -129,7 +136,7 @@ class CompanyResourceIT {
             .post()
             .uri(ENTITY_API_URL)
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(TestUtil.convertObjectToJsonBytes(company))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(companyDTO))
             .exchange()
             .expectStatus()
             .isBadRequest();
@@ -146,12 +153,13 @@ class CompanyResourceIT {
         company.setName(null);
 
         // Create the Company, which fails.
+        CompanyDTO companyDTO = companyMapper.toDto(company);
 
         webTestClient
             .post()
             .uri(ENTITY_API_URL)
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(TestUtil.convertObjectToJsonBytes(company))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(companyDTO))
             .exchange()
             .expectStatus()
             .isBadRequest();
@@ -174,8 +182,9 @@ class CompanyResourceIT {
             .isOk()
             .expectHeader()
             .contentTypeCompatibleWith(MediaType.APPLICATION_NDJSON)
-            .returnResult(Company.class)
+            .returnResult(CompanyDTO.class)
             .getResponseBody()
+            .map(companyMapper::toEntity)
             .filter(company::equals)
             .collectList()
             .block(Duration.ofSeconds(5));
@@ -257,12 +266,13 @@ class CompanyResourceIT {
         // Update the company
         Company updatedCompany = companyRepository.findById(company.getId()).block();
         updatedCompany.name(UPDATED_NAME).address(UPDATED_ADDRESS);
+        CompanyDTO companyDTO = companyMapper.toDto(updatedCompany);
 
         webTestClient
             .put()
-            .uri(ENTITY_API_URL_ID, updatedCompany.getId())
+            .uri(ENTITY_API_URL_ID, companyDTO.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(TestUtil.convertObjectToJsonBytes(updatedCompany))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(companyDTO))
             .exchange()
             .expectStatus()
             .isOk();
@@ -280,12 +290,15 @@ class CompanyResourceIT {
         int databaseSizeBeforeUpdate = companyRepository.findAll().collectList().block().size();
         company.setId(count.incrementAndGet());
 
+        // Create the Company
+        CompanyDTO companyDTO = companyMapper.toDto(company);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         webTestClient
             .put()
-            .uri(ENTITY_API_URL_ID, company.getId())
+            .uri(ENTITY_API_URL_ID, companyDTO.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(TestUtil.convertObjectToJsonBytes(company))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(companyDTO))
             .exchange()
             .expectStatus()
             .isBadRequest();
@@ -300,12 +313,15 @@ class CompanyResourceIT {
         int databaseSizeBeforeUpdate = companyRepository.findAll().collectList().block().size();
         company.setId(count.incrementAndGet());
 
+        // Create the Company
+        CompanyDTO companyDTO = companyMapper.toDto(company);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         webTestClient
             .put()
             .uri(ENTITY_API_URL_ID, count.incrementAndGet())
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(TestUtil.convertObjectToJsonBytes(company))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(companyDTO))
             .exchange()
             .expectStatus()
             .isBadRequest();
@@ -320,12 +336,15 @@ class CompanyResourceIT {
         int databaseSizeBeforeUpdate = companyRepository.findAll().collectList().block().size();
         company.setId(count.incrementAndGet());
 
+        // Create the Company
+        CompanyDTO companyDTO = companyMapper.toDto(company);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         webTestClient
             .put()
             .uri(ENTITY_API_URL)
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(TestUtil.convertObjectToJsonBytes(company))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(companyDTO))
             .exchange()
             .expectStatus()
             .isEqualTo(405);
@@ -398,12 +417,15 @@ class CompanyResourceIT {
         int databaseSizeBeforeUpdate = companyRepository.findAll().collectList().block().size();
         company.setId(count.incrementAndGet());
 
+        // Create the Company
+        CompanyDTO companyDTO = companyMapper.toDto(company);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         webTestClient
             .patch()
-            .uri(ENTITY_API_URL_ID, company.getId())
+            .uri(ENTITY_API_URL_ID, companyDTO.getId())
             .contentType(MediaType.valueOf("application/merge-patch+json"))
-            .bodyValue(TestUtil.convertObjectToJsonBytes(company))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(companyDTO))
             .exchange()
             .expectStatus()
             .isBadRequest();
@@ -418,12 +440,15 @@ class CompanyResourceIT {
         int databaseSizeBeforeUpdate = companyRepository.findAll().collectList().block().size();
         company.setId(count.incrementAndGet());
 
+        // Create the Company
+        CompanyDTO companyDTO = companyMapper.toDto(company);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         webTestClient
             .patch()
             .uri(ENTITY_API_URL_ID, count.incrementAndGet())
             .contentType(MediaType.valueOf("application/merge-patch+json"))
-            .bodyValue(TestUtil.convertObjectToJsonBytes(company))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(companyDTO))
             .exchange()
             .expectStatus()
             .isBadRequest();
@@ -438,12 +463,15 @@ class CompanyResourceIT {
         int databaseSizeBeforeUpdate = companyRepository.findAll().collectList().block().size();
         company.setId(count.incrementAndGet());
 
+        // Create the Company
+        CompanyDTO companyDTO = companyMapper.toDto(company);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         webTestClient
             .patch()
             .uri(ENTITY_API_URL)
             .contentType(MediaType.valueOf("application/merge-patch+json"))
-            .bodyValue(TestUtil.convertObjectToJsonBytes(company))
+            .bodyValue(TestUtil.convertObjectToJsonBytes(companyDTO))
             .exchange()
             .expectStatus()
             .isEqualTo(405);

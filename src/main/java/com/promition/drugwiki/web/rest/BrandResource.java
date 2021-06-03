@@ -1,7 +1,8 @@
 package com.promition.drugwiki.web.rest;
 
-import com.promition.drugwiki.domain.Brand;
 import com.promition.drugwiki.repository.BrandRepository;
+import com.promition.drugwiki.service.BrandService;
+import com.promition.drugwiki.service.dto.BrandDTO;
 import com.promition.drugwiki.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
@@ -29,7 +29,6 @@ import tech.jhipster.web.util.reactive.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class BrandResource {
 
     private final Logger log = LoggerFactory.getLogger(BrandResource.class);
@@ -39,27 +38,30 @@ public class BrandResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final BrandService brandService;
+
     private final BrandRepository brandRepository;
 
-    public BrandResource(BrandRepository brandRepository) {
+    public BrandResource(BrandService brandService, BrandRepository brandRepository) {
+        this.brandService = brandService;
         this.brandRepository = brandRepository;
     }
 
     /**
      * {@code POST  /brands} : Create a new brand.
      *
-     * @param brand the brand to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new brand, or with status {@code 400 (Bad Request)} if the brand has already an ID.
+     * @param brandDTO the brandDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new brandDTO, or with status {@code 400 (Bad Request)} if the brand has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/brands")
-    public Mono<ResponseEntity<Brand>> createBrand(@Valid @RequestBody Brand brand) throws URISyntaxException {
-        log.debug("REST request to save Brand : {}", brand);
-        if (brand.getId() != null) {
+    public Mono<ResponseEntity<BrandDTO>> createBrand(@Valid @RequestBody BrandDTO brandDTO) throws URISyntaxException {
+        log.debug("REST request to save Brand : {}", brandDTO);
+        if (brandDTO.getId() != null) {
             throw new BadRequestAlertException("A new brand cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        return brandRepository
-            .save(brand)
+        return brandService
+            .save(brandDTO)
             .map(
                 result -> {
                     try {
@@ -77,23 +79,23 @@ public class BrandResource {
     /**
      * {@code PUT  /brands/:id} : Updates an existing brand.
      *
-     * @param id the id of the brand to save.
-     * @param brand the brand to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated brand,
-     * or with status {@code 400 (Bad Request)} if the brand is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the brand couldn't be updated.
+     * @param id the id of the brandDTO to save.
+     * @param brandDTO the brandDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated brandDTO,
+     * or with status {@code 400 (Bad Request)} if the brandDTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the brandDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/brands/{id}")
-    public Mono<ResponseEntity<Brand>> updateBrand(
+    public Mono<ResponseEntity<BrandDTO>> updateBrand(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody Brand brand
+        @Valid @RequestBody BrandDTO brandDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update Brand : {}, {}", id, brand);
-        if (brand.getId() == null) {
+        log.debug("REST request to update Brand : {}, {}", id, brandDTO);
+        if (brandDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, brand.getId())) {
+        if (!Objects.equals(id, brandDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -105,8 +107,8 @@ public class BrandResource {
                         return Mono.error(new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
                     }
 
-                    return brandRepository
-                        .save(brand)
+                    return brandService
+                        .save(brandDTO)
                         .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
                         .map(
                             result ->
@@ -124,24 +126,24 @@ public class BrandResource {
     /**
      * {@code PATCH  /brands/:id} : Partial updates given fields of an existing brand, field will ignore if it is null
      *
-     * @param id the id of the brand to save.
-     * @param brand the brand to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated brand,
-     * or with status {@code 400 (Bad Request)} if the brand is not valid,
-     * or with status {@code 404 (Not Found)} if the brand is not found,
-     * or with status {@code 500 (Internal Server Error)} if the brand couldn't be updated.
+     * @param id the id of the brandDTO to save.
+     * @param brandDTO the brandDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated brandDTO,
+     * or with status {@code 400 (Bad Request)} if the brandDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the brandDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the brandDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/brands/{id}", consumes = "application/merge-patch+json")
-    public Mono<ResponseEntity<Brand>> partialUpdateBrand(
+    public Mono<ResponseEntity<BrandDTO>> partialUpdateBrand(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody Brand brand
+        @NotNull @RequestBody BrandDTO brandDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Brand partially : {}, {}", id, brand);
-        if (brand.getId() == null) {
+        log.debug("REST request to partial update Brand partially : {}, {}", id, brandDTO);
+        if (brandDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, brand.getId())) {
+        if (!Objects.equals(id, brandDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -153,21 +155,7 @@ public class BrandResource {
                         return Mono.error(new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
                     }
 
-                    Mono<Brand> result = brandRepository
-                        .findById(brand.getId())
-                        .map(
-                            existingBrand -> {
-                                if (brand.getName() != null) {
-                                    existingBrand.setName(brand.getName());
-                                }
-                                if (brand.getPrice() != null) {
-                                    existingBrand.setPrice(brand.getPrice());
-                                }
-
-                                return existingBrand;
-                            }
-                        )
-                        .flatMap(brandRepository::save);
+                    Mono<BrandDTO> result = brandService.partialUpdate(brandDTO);
 
                     return result
                         .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
@@ -190,9 +178,9 @@ public class BrandResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of brands in body.
      */
     @GetMapping("/brands")
-    public Mono<List<Brand>> getAllBrands() {
+    public Mono<List<BrandDTO>> getAllBrands() {
         log.debug("REST request to get all Brands");
-        return brandRepository.findAll().collectList();
+        return brandService.findAll().collectList();
     }
 
     /**
@@ -200,36 +188,36 @@ public class BrandResource {
      * @return the {@link Flux} of brands.
      */
     @GetMapping(value = "/brands", produces = MediaType.APPLICATION_NDJSON_VALUE)
-    public Flux<Brand> getAllBrandsAsStream() {
+    public Flux<BrandDTO> getAllBrandsAsStream() {
         log.debug("REST request to get all Brands as a stream");
-        return brandRepository.findAll();
+        return brandService.findAll();
     }
 
     /**
      * {@code GET  /brands/:id} : get the "id" brand.
      *
-     * @param id the id of the brand to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the brand, or with status {@code 404 (Not Found)}.
+     * @param id the id of the brandDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the brandDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/brands/{id}")
-    public Mono<ResponseEntity<Brand>> getBrand(@PathVariable Long id) {
+    public Mono<ResponseEntity<BrandDTO>> getBrand(@PathVariable Long id) {
         log.debug("REST request to get Brand : {}", id);
-        Mono<Brand> brand = brandRepository.findById(id);
-        return ResponseUtil.wrapOrNotFound(brand);
+        Mono<BrandDTO> brandDTO = brandService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(brandDTO);
     }
 
     /**
      * {@code DELETE  /brands/:id} : delete the "id" brand.
      *
-     * @param id the id of the brand to delete.
+     * @param id the id of the brandDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/brands/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public Mono<ResponseEntity<Void>> deleteBrand(@PathVariable Long id) {
         log.debug("REST request to delete Brand : {}", id);
-        return brandRepository
-            .deleteById(id)
+        return brandService
+            .delete(id)
             .map(
                 result ->
                     ResponseEntity
