@@ -1,0 +1,27 @@
+/**
+ * The Company entity.
+ * @author A true hipster
+ */
+entity Company {
+    /** fieldName */
+    name String required
+    address String
+}
+
+/**
+ * The Brand entity.
+ * @author A true hipster
+ */
+entity Brand {
+    /** name */
+    name String required
+    /** price */
+    price Float
+ }
+
+/**
+ * One to many relationship.
+ */
+relationship OneToMany {
+    Company to Brand
+}
