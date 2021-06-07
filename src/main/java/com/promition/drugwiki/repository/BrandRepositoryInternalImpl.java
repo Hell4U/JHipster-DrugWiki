@@ -149,6 +149,7 @@ class BrandSqlHelper {
         columns.add(Column.aliased("id", table, columnPrefix + "_id"));
         columns.add(Column.aliased("name", table, columnPrefix + "_name"));
         columns.add(Column.aliased("price", table, columnPrefix + "_price"));
+        columns.add(Column.aliased("description", table, columnPrefix + "_description"));
 
         columns.add(Column.aliased("company_id", table, columnPrefix + "_company_id"));
         return columns;

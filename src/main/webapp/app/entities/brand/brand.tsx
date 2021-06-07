@@ -44,6 +44,7 @@ export const Brand = (props: IBrandProps) => {
                 <th>ID</th>
                 <th>Name</th>
                 <th>Price</th>
+                <th>Description</th>
                 <th>Company</th>
                 <th />
               </tr>
@@ -58,6 +59,7 @@ export const Brand = (props: IBrandProps) => {
                   </td>
                   <td>{brand.name}</td>
                   <td>{brand.price}</td>
+                  <td>{brand.description}</td>
                   <td>{brand.company ? <Link to={`company/${brand.company.id}`}>{brand.company.id}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">

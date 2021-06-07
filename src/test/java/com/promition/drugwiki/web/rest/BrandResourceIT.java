@@ -40,6 +40,9 @@ class BrandResourceIT {
     private static final Float DEFAULT_PRICE = 1F;
     private static final Float UPDATED_PRICE = 2F;
 
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/brands";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -67,7 +70,7 @@ class BrandResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Brand createEntity(EntityManager em) {
-        Brand brand = new Brand().name(DEFAULT_NAME).price(DEFAULT_PRICE);
+        Brand brand = new Brand().name(DEFAULT_NAME).price(DEFAULT_PRICE).description(DEFAULT_DESCRIPTION);
         return brand;
     }
 
@@ -78,7 +81,7 @@ class BrandResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Brand createUpdatedEntity(EntityManager em) {
-        Brand brand = new Brand().name(UPDATED_NAME).price(UPDATED_PRICE);
+        Brand brand = new Brand().name(UPDATED_NAME).price(UPDATED_PRICE).description(UPDATED_DESCRIPTION);
         return brand;
     }
 
@@ -121,6 +124,7 @@ class BrandResourceIT {
         Brand testBrand = brandList.get(brandList.size() - 1);
         assertThat(testBrand.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testBrand.getPrice()).isEqualTo(DEFAULT_PRICE);
+        assertThat(testBrand.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 
     @Test
@@ -194,6 +198,7 @@ class BrandResourceIT {
         Brand testBrand = brandList.get(0);
         assertThat(testBrand.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testBrand.getPrice()).isEqualTo(DEFAULT_PRICE);
+        assertThat(testBrand.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 
     @Test
@@ -217,7 +222,9 @@ class BrandResourceIT {
             .jsonPath("$.[*].name")
             .value(hasItem(DEFAULT_NAME))
             .jsonPath("$.[*].price")
-            .value(hasItem(DEFAULT_PRICE.doubleValue()));
+            .value(hasItem(DEFAULT_PRICE.doubleValue()))
+            .jsonPath("$.[*].description")
+            .value(hasItem(DEFAULT_DESCRIPTION));
     }
 
     @Test
@@ -241,7 +248,9 @@ class BrandResourceIT {
             .jsonPath("$.name")
             .value(is(DEFAULT_NAME))
             .jsonPath("$.price")
-            .value(is(DEFAULT_PRICE.doubleValue()));
+            .value(is(DEFAULT_PRICE.doubleValue()))
+            .jsonPath("$.description")
+            .value(is(DEFAULT_DESCRIPTION));
     }
 
     @Test
@@ -265,7 +274,7 @@ class BrandResourceIT {
 
         // Update the brand
         Brand updatedBrand = brandRepository.findById(brand.getId()).block();
-        updatedBrand.name(UPDATED_NAME).price(UPDATED_PRICE);
+        updatedBrand.name(UPDATED_NAME).price(UPDATED_PRICE).description(UPDATED_DESCRIPTION);
         BrandDTO brandDTO = brandMapper.toDto(updatedBrand);
 
         webTestClient
@@ -283,6 +292,7 @@ class BrandResourceIT {
         Brand testBrand = brandList.get(brandList.size() - 1);
         assertThat(testBrand.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testBrand.getPrice()).isEqualTo(UPDATED_PRICE);
+        assertThat(testBrand.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
     @Test
@@ -365,7 +375,7 @@ class BrandResourceIT {
         Brand partialUpdatedBrand = new Brand();
         partialUpdatedBrand.setId(brand.getId());
 
-        partialUpdatedBrand.name(UPDATED_NAME);
+        partialUpdatedBrand.name(UPDATED_NAME).description(UPDATED_DESCRIPTION);
 
         webTestClient
             .patch()
@@ -382,6 +392,7 @@ class BrandResourceIT {
         Brand testBrand = brandList.get(brandList.size() - 1);
         assertThat(testBrand.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testBrand.getPrice()).isEqualTo(DEFAULT_PRICE);
+        assertThat(testBrand.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
     @Test
@@ -395,7 +406,7 @@ class BrandResourceIT {
         Brand partialUpdatedBrand = new Brand();
         partialUpdatedBrand.setId(brand.getId());
 
-        partialUpdatedBrand.name(UPDATED_NAME).price(UPDATED_PRICE);
+        partialUpdatedBrand.name(UPDATED_NAME).price(UPDATED_PRICE).description(UPDATED_DESCRIPTION);
 
         webTestClient
             .patch()
@@ -412,6 +423,7 @@ class BrandResourceIT {
         Brand testBrand = brandList.get(brandList.size() - 1);
         assertThat(testBrand.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testBrand.getPrice()).isEqualTo(UPDATED_PRICE);
+        assertThat(testBrand.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
     @Test

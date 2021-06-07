@@ -36,6 +36,10 @@ export const BrandDetail = (props: IBrandDetailProps) => {
             <UncontrolledTooltip target="price">price</UncontrolledTooltip>
           </dt>
           <dd>{brandEntity.price}</dd>
+          <dt>
+            <span id="description">Description</span>
+          </dt>
+          <dd>{brandEntity.description}</dd>
           <dt>Company</dt>
           <dd>{brandEntity.company ? brandEntity.company.id : ''}</dd>
         </dl>

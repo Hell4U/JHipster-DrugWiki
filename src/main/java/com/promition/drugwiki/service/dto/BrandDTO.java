@@ -27,6 +27,9 @@ public class BrandDTO implements Serializable {
     @ApiModelProperty(value = "price")
     private Float price;
 
+    @Size(max = 1000)
+    private String description;
+
     private CompanyDTO company;
 
     public Long getId() {
@@ -51,6 +54,14 @@ public class BrandDTO implements Serializable {
 
     public void setPrice(Float price) {
         this.price = price;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public CompanyDTO getCompany() {
@@ -89,6 +100,7 @@ public class BrandDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", price=" + getPrice() +
+            ", description='" + getDescription() + "'" +
             ", company=" + getCompany() +
             "}";
     }

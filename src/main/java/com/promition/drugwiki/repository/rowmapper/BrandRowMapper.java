@@ -28,6 +28,7 @@ public class BrandRowMapper implements BiFunction<Row, String, Brand> {
         entity.setId(converter.fromRow(row, prefix + "_id", Long.class));
         entity.setName(converter.fromRow(row, prefix + "_name", String.class));
         entity.setPrice(converter.fromRow(row, prefix + "_price", Float.class));
+        entity.setDescription(converter.fromRow(row, prefix + "_description", String.class));
         entity.setCompanyId(converter.fromRow(row, prefix + "_company_id", Long.class));
         return entity;
     }

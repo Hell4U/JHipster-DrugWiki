@@ -28,4 +28,5 @@ relationship OneToMany {
 
 service all with serviceClass
 
+
 dto all with mapstruct

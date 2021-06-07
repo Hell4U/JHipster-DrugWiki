@@ -2,6 +2,8 @@ package com.promition.drugwiki.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import javax.persistence.CascadeType;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -32,11 +34,16 @@ public class Brand implements Serializable {
     @Column("price")
     private Float price;
 
+    @Size(max = 1000)
+    @Column("description")
+    private String description;
+
     @JsonIgnoreProperties(value = { "brands" }, allowSetters = true)
     @Transient
     private Company company;
 
     @Column("company_id")
+    @OneToOne(cascade = CascadeType.REMOVE)
     private Long companyId;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -77,6 +84,19 @@ public class Brand implements Serializable {
 
     public void setPrice(Float price) {
         this.price = price;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public Brand description(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Company getCompany() {
@@ -128,6 +148,7 @@ public class Brand implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", price=" + getPrice() +
+            ", description='" + getDescription() + "'" +
             "}";
     }
 }

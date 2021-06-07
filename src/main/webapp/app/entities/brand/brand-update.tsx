@@ -101,6 +101,20 @@ export const BrandUpdate = (props: IBrandUpdateProps) => {
                 <UncontrolledTooltip target="priceLabel">price</UncontrolledTooltip>
               </AvGroup>
               <AvGroup>
+                <Label id="descriptionLabel" for="brand-description">
+                  Description
+                </Label>
+                <AvField
+                  id="brand-description"
+                  data-cy="description"
+                  type="text"
+                  name="description"
+                  validate={{
+                    maxLength: { value: 1000, errorMessage: 'This field cannot be longer than 1000 characters.' },
+                  }}
+                />
+              </AvGroup>
+              <AvGroup>
                 <Label for="brand-company">Company</Label>
                 <AvInput id="brand-company" data-cy="company" type="select" className="form-control" name="companyId">
                   <option value="" key="0" />

@@ -11,6 +11,12 @@
       "fieldName": "price",
       "fieldType": "Float",
       "javadoc": "price"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "1000"
     }
   ],
   "relationships": [

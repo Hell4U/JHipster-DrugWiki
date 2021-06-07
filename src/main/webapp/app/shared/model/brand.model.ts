@@ -4,6 +4,7 @@ export interface IBrand {
   id?: number;
   name?: string;
   price?: number | null;
+  description?: string | null;
   company?: ICompany | null;
 }
 
