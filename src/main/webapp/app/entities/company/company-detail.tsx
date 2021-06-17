@@ -35,6 +35,10 @@ export const CompanyDetail = (props: ICompanyDetailProps) => {
             <span id="address">Address</span>
           </dt>
           <dd>{companyEntity.address}</dd>
+          <dt>
+            <span id="website">Website</span>
+          </dt>
+          <dd>{companyEntity.website}</dd>
         </dl>
         <Button tag={Link} to="/company" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>

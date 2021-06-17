@@ -31,6 +31,9 @@ public class Company implements Serializable {
     @Column("address")
     private String address;
 
+    @Column("website")
+    private String website;
+
     @Transient
     @JsonIgnoreProperties(value = { "company" }, allowSetters = true)
     private Set<Brand> brands = new HashSet<>();
@@ -73,6 +76,19 @@ public class Company implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getWebsite() {
+        return this.website;
+    }
+
+    public Company website(String website) {
+        this.website = website;
+        return this;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
     public Set<Brand> getBrands() {
@@ -132,6 +148,7 @@ public class Company implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", address='" + getAddress() + "'" +
+            ", website='" + getWebsite() + "'" +
             "}";
     }
 }

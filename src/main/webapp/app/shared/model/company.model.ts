@@ -4,6 +4,7 @@ export interface ICompany {
   id?: number;
   name?: string;
   address?: string | null;
+  website?: string | null;
   brands?: IBrand[] | null;
 }
 

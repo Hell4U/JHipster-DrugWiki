@@ -44,6 +44,7 @@ export const Company = (props: ICompanyProps) => {
                 <th>ID</th>
                 <th>Name</th>
                 <th>Address</th>
+                <th>Website</th>
                 <th />
               </tr>
             </thead>
@@ -57,6 +58,7 @@ export const Company = (props: ICompanyProps) => {
                   </td>
                   <td>{company.name}</td>
                   <td>{company.address}</td>
+                  <td>{company.website}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${company.id}`} color="info" size="sm" data-cy="entityDetailsButton">

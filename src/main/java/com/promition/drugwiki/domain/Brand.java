@@ -2,8 +2,6 @@ package com.promition.drugwiki.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import javax.persistence.CascadeType;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -43,7 +41,6 @@ public class Brand implements Serializable {
     private Company company;
 
     @Column("company_id")
-    @OneToOne(cascade = CascadeType.REMOVE)
     private Long companyId;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

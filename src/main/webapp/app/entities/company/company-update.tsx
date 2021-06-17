@@ -94,6 +94,12 @@ export const CompanyUpdate = (props: ICompanyUpdateProps) => {
                 </Label>
                 <AvField id="company-address" data-cy="address" type="text" name="address" />
               </AvGroup>
+              <AvGroup>
+                <Label id="websiteLabel" for="company-website">
+                  Website
+                </Label>
+                <AvField id="company-website" data-cy="website" type="text" name="website" />
+              </AvGroup>
               <Button tag={Link} id="cancel-save" to="/company" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

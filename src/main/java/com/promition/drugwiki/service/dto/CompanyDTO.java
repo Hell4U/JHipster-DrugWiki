@@ -23,6 +23,8 @@ public class CompanyDTO implements Serializable {
 
     private String address;
 
+    private String website;
+
     public Long getId() {
         return id;
     }
@@ -45,6 +47,14 @@ public class CompanyDTO implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
     @Override
@@ -75,6 +85,7 @@ public class CompanyDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", address='" + getAddress() + "'" +
+            ", website='" + getWebsite() + "'" +
             "}";
     }
 }

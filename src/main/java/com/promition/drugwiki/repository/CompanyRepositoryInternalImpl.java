@@ -132,6 +132,7 @@ class CompanySqlHelper {
         columns.add(Column.aliased("id", table, columnPrefix + "_id"));
         columns.add(Column.aliased("name", table, columnPrefix + "_name"));
         columns.add(Column.aliased("address", table, columnPrefix + "_address"));
+        columns.add(Column.aliased("website", table, columnPrefix + "_website"));
 
         return columns;
     }

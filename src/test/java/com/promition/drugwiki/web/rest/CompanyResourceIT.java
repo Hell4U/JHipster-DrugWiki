@@ -40,6 +40,9 @@ class CompanyResourceIT {
     private static final String DEFAULT_ADDRESS = "AAAAAAAAAA";
     private static final String UPDATED_ADDRESS = "BBBBBBBBBB";
 
+    private static final String DEFAULT_WEBSITE = "AAAAAAAAAA";
+    private static final String UPDATED_WEBSITE = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/companies";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -67,7 +70,7 @@ class CompanyResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Company createEntity(EntityManager em) {
-        Company company = new Company().name(DEFAULT_NAME).address(DEFAULT_ADDRESS);
+        Company company = new Company().name(DEFAULT_NAME).address(DEFAULT_ADDRESS).website(DEFAULT_WEBSITE);
         return company;
     }
 
@@ -78,7 +81,7 @@ class CompanyResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Company createUpdatedEntity(EntityManager em) {
-        Company company = new Company().name(UPDATED_NAME).address(UPDATED_ADDRESS);
+        Company company = new Company().name(UPDATED_NAME).address(UPDATED_ADDRESS).website(UPDATED_WEBSITE);
         return company;
     }
 
@@ -121,6 +124,7 @@ class CompanyResourceIT {
         Company testCompany = companyList.get(companyList.size() - 1);
         assertThat(testCompany.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testCompany.getAddress()).isEqualTo(DEFAULT_ADDRESS);
+        assertThat(testCompany.getWebsite()).isEqualTo(DEFAULT_WEBSITE);
     }
 
     @Test
@@ -194,6 +198,7 @@ class CompanyResourceIT {
         Company testCompany = companyList.get(0);
         assertThat(testCompany.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testCompany.getAddress()).isEqualTo(DEFAULT_ADDRESS);
+        assertThat(testCompany.getWebsite()).isEqualTo(DEFAULT_WEBSITE);
     }
 
     @Test
@@ -217,7 +222,9 @@ class CompanyResourceIT {
             .jsonPath("$.[*].name")
             .value(hasItem(DEFAULT_NAME))
             .jsonPath("$.[*].address")
-            .value(hasItem(DEFAULT_ADDRESS));
+            .value(hasItem(DEFAULT_ADDRESS))
+            .jsonPath("$.[*].website")
+            .value(hasItem(DEFAULT_WEBSITE));
     }
 
     @Test
@@ -241,7 +248,9 @@ class CompanyResourceIT {
             .jsonPath("$.name")
             .value(is(DEFAULT_NAME))
             .jsonPath("$.address")
-            .value(is(DEFAULT_ADDRESS));
+            .value(is(DEFAULT_ADDRESS))
+            .jsonPath("$.website")
+            .value(is(DEFAULT_WEBSITE));
     }
 
     @Test
@@ -265,7 +274,7 @@ class CompanyResourceIT {
 
         // Update the company
         Company updatedCompany = companyRepository.findById(company.getId()).block();
-        updatedCompany.name(UPDATED_NAME).address(UPDATED_ADDRESS);
+        updatedCompany.name(UPDATED_NAME).address(UPDATED_ADDRESS).website(UPDATED_WEBSITE);
         CompanyDTO companyDTO = companyMapper.toDto(updatedCompany);
 
         webTestClient
@@ -283,6 +292,7 @@ class CompanyResourceIT {
         Company testCompany = companyList.get(companyList.size() - 1);
         assertThat(testCompany.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testCompany.getAddress()).isEqualTo(UPDATED_ADDRESS);
+        assertThat(testCompany.getWebsite()).isEqualTo(UPDATED_WEBSITE);
     }
 
     @Test
@@ -380,6 +390,7 @@ class CompanyResourceIT {
         Company testCompany = companyList.get(companyList.size() - 1);
         assertThat(testCompany.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testCompany.getAddress()).isEqualTo(DEFAULT_ADDRESS);
+        assertThat(testCompany.getWebsite()).isEqualTo(DEFAULT_WEBSITE);
     }
 
     @Test
@@ -393,7 +404,7 @@ class CompanyResourceIT {
         Company partialUpdatedCompany = new Company();
         partialUpdatedCompany.setId(company.getId());
 
-        partialUpdatedCompany.name(UPDATED_NAME).address(UPDATED_ADDRESS);
+        partialUpdatedCompany.name(UPDATED_NAME).address(UPDATED_ADDRESS).website(UPDATED_WEBSITE);
 
         webTestClient
             .patch()
@@ -410,6 +421,7 @@ class CompanyResourceIT {
         Company testCompany = companyList.get(companyList.size() - 1);
         assertThat(testCompany.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testCompany.getAddress()).isEqualTo(UPDATED_ADDRESS);
+        assertThat(testCompany.getWebsite()).isEqualTo(UPDATED_WEBSITE);
     }
 
     @Test
