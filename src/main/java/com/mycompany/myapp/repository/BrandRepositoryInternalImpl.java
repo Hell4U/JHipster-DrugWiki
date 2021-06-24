@@ -5,21 +5,17 @@ import static org.springframework.data.relational.core.query.Query.query;
 
 import com.mycompany.myapp.domain.Brand;
 import com.mycompany.myapp.domain.Generics;
-import com.mycompany.myapp.domain.enumeration.BrandType;
-import com.mycompany.myapp.domain.enumeration.TypeUnit;
 import com.mycompany.myapp.repository.rowmapper.BrandRowMapper;
 import com.mycompany.myapp.repository.rowmapper.CompanyRowMapper;
 import com.mycompany.myapp.service.EntityManager;
 import com.mycompany.myapp.service.EntityManager.LinkTable;
 import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.function.BiFunction;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Criteria;
@@ -77,8 +73,8 @@ class BrandRepositoryInternalImpl implements BrandRepositoryInternal {
     }
 
     @Override
-    public List<Brand> findAllByBnameContaining(String name) {
-        return findAllByBnameContaining(name);
+    public Flux<Brand> findAllByBname(String name) {
+        return findAllByBname(name);
     }
 
 

@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.mycompany.myapp.IntegrationTest;
 import com.mycompany.myapp.repository.BrandRepository;
+import com.mycompany.myapp.service.SearchService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -20,13 +21,13 @@ class SearchResourceIT {
 
     private MockMvc restMockMvc;
 
-    private com.mycompany.myapp.repository.BrandRepository brandRepository;
+    private com.mycompany.myapp.service.SearchService searchService;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        SearchResource searchResource = new SearchResource(brandRepository);
+        SearchResource searchResource = new SearchResource();
         restMockMvc = MockMvcBuilders.standaloneSetup(searchResource).build();
     }
 

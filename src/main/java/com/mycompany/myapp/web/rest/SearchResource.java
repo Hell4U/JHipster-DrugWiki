@@ -2,6 +2,7 @@ package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.Brand;
 import com.mycompany.myapp.repository.BrandRepository;
+import com.mycompany.myapp.service.SearchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.net.URI;
 import java.util.List;
 
 /**
@@ -22,18 +24,14 @@ public class SearchResource {
 
     private final Logger log = LoggerFactory.getLogger(SearchResource.class);
 
-    private final BrandRepository brandRepository;
-
-    public SearchResource(BrandRepository brandRepository) {
-        this.brandRepository = brandRepository;
-    }
-
+    @Autowired
+    private SearchService searchService;
 
     /**
      * GET search
      */
-    @GetMapping("/brand/")
-    public ResponseEntity<List<Brand>> search(String name) {
-        return ResponseEntity.created(URI.create("/api/search/")).body(brandRepository.findAllByBnameContaining(name));
+    @GetMapping("/brand")
+    public Flux<Brand> search(String name) {
+        return searchService.searchBrand(name);
     }
 }

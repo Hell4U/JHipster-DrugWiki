@@ -10,9 +10,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
- * Spring Data SQL reactive repository for the Brand entity.
+ * Spring Data SQL reactive repository for the  entity.
  */
 @SuppressWarnings("unused")
 @Repository
@@ -28,7 +29,7 @@ public interface BrandRepository extends R2dbcRepository<Brand, Long>, BrandRepo
     @Override
     Flux<Brand> findAllWithEagerRelationships(Pageable page);
 
-    List<Brand> findAllByBnameContaining(String name);
+    Flux<Brand> findAllByBname(String name);
 
     @Override
     Mono<Void> deleteById(Long id);
@@ -64,7 +65,7 @@ interface BrandRepositoryInternal {
     Mono<Brand> findById(Long id);
     Flux<Brand> findAllBy(Pageable pageable);
     Flux<Brand> findAllBy(Pageable pageable, Criteria criteria);
-    List<Brand> findAllByBnameContaining(String name);
+   Flux<Brand> findAllByBname(String name);
 
     Mono<Brand> findOneWithEagerRelationships(Long id);
 
