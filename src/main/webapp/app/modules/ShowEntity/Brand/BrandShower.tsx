@@ -8,6 +8,7 @@ import Capsule from 'app/Images/capsule.png';
 import Injection from 'app/Images/injection.png';
 import Tablet from 'app/Images/tablet.png';
 import Syrup from 'app/Images/syrup.png';
+import { Link } from 'react-router-dom';
 
 const imageType = {
   Capsule: Capsule,
@@ -17,11 +18,15 @@ const imageType = {
 };
 
 const BrandShower = props => {
-  const { brandList } = props;
+  const { brandList, cardDetailHandler } = props;
 
   useEffect(() => {
     props.getEntities();
   }, []);
+
+  const brandOnClick = brand => {
+    console.log(brand.id);
+  };
 
   return (
     <>
@@ -29,17 +34,19 @@ const BrandShower = props => {
         {brandList && brandList.length > 0
           ? brandList.map((elm, idx) => {
               return (
-                <Col md="2" className="mb-5" key={elm.id}>
-                  <Card>
-                    <CardImg top width="300px" height="150px" alt="Type" src={imageType[elm.type]} />
-                    <CardBody>
-                      <CardTitle tag="h4">{elm.bname}</CardTitle>
-                      <CardSubtitle tag="h6" className="mb-4 mt-0 text-muted">
-                        {elm.companyofMedicine ? elm.companyofMedicine.cname : ''}
-                      </CardSubtitle>
-                      <CardText>Price:-{elm.price}</CardText>
-                    </CardBody>
-                  </Card>
+                <Col md="4" sm="12" lg="2" className="mb-5">
+                  <Link to={`brandDetail/${elm.id}`} style={{ cursor: 'pointer' }}>
+                    <Card key={elm.id}>
+                      <CardImg top width="300px" height="150px" alt="Type" src={imageType[elm.type]} />
+                      <CardBody>
+                        <CardTitle tag="h4">{elm.bname}</CardTitle>
+                        <CardSubtitle tag="h6" className="mb-4 mt-0 text-muted">
+                          {elm.companyofMedicine ? elm.companyofMedicine.cname : ''}
+                        </CardSubtitle>
+                        <CardText>Price:-{elm.price}</CardText>
+                      </CardBody>
+                    </Card>
+                  </Link>
                 </Col>
               );
             })

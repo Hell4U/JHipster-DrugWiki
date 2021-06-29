@@ -27,7 +27,7 @@
     "webapp:prod": "npm run clean-www && npm run webapp:build:prod",
     "webapp:test": "npm run test",
     "webpack-dev-server": "npm run webpack -- serve",
-    "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
+    "webpack": "node --max_old_space_size=1024 node_modules/webpack/bin/webpack.js",
     "docker:db:up": "docker-compose -f src/main/docker/mysql.yml up -d",
     "docker:db:down": "docker-compose -f src/main/docker/mysql.yml down -v --remove-orphans",
     "docker:jhipster-registry:up": "docker-compose -f src/main/docker/jhipster-registry.yml up -d",
