@@ -11,10 +11,10 @@ import Syrup from 'app/Images/syrup.png';
 import { Link } from 'react-router-dom';
 
 const imageType = {
-  Capsule: Capsule,
-  Injection: Injection,
-  Tablet: Tablet,
-  Syrup: Syrup,
+  Capsule,
+  Injection,
+  Tablet,
+  Syrup,
 };
 
 const BrandShower = props => {
@@ -34,9 +34,9 @@ const BrandShower = props => {
         {brandList && brandList.length > 0
           ? brandList.map((elm, idx) => {
               return (
-                <Col md="4" sm="12" lg="2" className="mb-5">
-                  <Link to={`brandDetail/${elm.id}`} style={{ cursor: 'pointer' }}>
-                    <Card key={elm.id}>
+                <Col md="4" sm="12" lg="2" className="mb-5" key={elm.id}>
+                  <Link to={`/guest/brand/brandDetail/${elm.id}`}>
+                    <Card>
                       <CardImg top width="300px" height="150px" alt="Type" src={imageType[elm.type]} />
                       <CardBody>
                         <CardTitle tag="h4">{elm.bname}</CardTitle>

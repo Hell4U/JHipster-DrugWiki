@@ -1,12 +1,16 @@
 import React from 'react';
-import { Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, RouteComponentProps } from 'react-router-dom';
 import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
 import BrandDetail from './BrandDetail';
-
-const Routes = ({ match }) => {
+import PageNotFound from 'app/shared/error/page-not-found';
+type TParams = { id: string };
+const Routes = ({ match }: RouteComponentProps<TParams>) => {
   <>
     <Switch>
-      <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={BrandDetail} />
+      <ErrorBoundaryRoute path={`${match.url}/:id`} exact component={BrandDetail} />
+      <ErrorBoundaryRoute component={PageNotFound} />
     </Switch>
   </>;
 };
+
+export default Routes;
