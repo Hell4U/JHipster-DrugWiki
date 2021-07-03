@@ -21,11 +21,13 @@ export const IngredientsUpdate = (props: RouteComponentProps<{ id: string }>) =>
   const updateSuccess = useAppSelector(state => state.ingredients.updateSuccess);
 
   const handleClose = () => {
-    props.history.push('/ingredients');
+    props.history.push('/ingredients' + props.location.search);
   };
 
   useEffect(() => {
-    if (!isNew) {
+    if (isNew) {
+      dispatch(reset());
+    } else {
       dispatch(getEntity(props.match.params.id));
     }
   }, []);

@@ -55,7 +55,7 @@
   ],
   "entityTableName": "brand",
   "dto": "mapstruct",
-  "pagination": "infinite-scroll",
+  "pagination": "pagination",
   "service": "serviceImpl",
   "jpaMetamodelFiltering": true,
   "fluentMethods": true,

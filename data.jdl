@@ -95,6 +95,6 @@ relationship ManyToMany {
 }
 
 dto Brand, Company, Generics, Ingredients with mapstruct
-paginate Brand, Company, Generics, Ingredients with infinite-scroll
+paginate Brand, Company, Generics, Ingredients with pagination
 service Brand, Company, Generics, Ingredients with serviceImpl
 filter Brand, Company, Generics, Ingredients

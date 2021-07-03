@@ -27,11 +27,13 @@ export const BrandUpdate = (props: RouteComponentProps<{ id: string }>) => {
   const updateSuccess = useAppSelector(state => state.brand.updateSuccess);
 
   const handleClose = () => {
-    props.history.push('/brand');
+    props.history.push('/brand' + props.location.search);
   };
 
   useEffect(() => {
-    if (!isNew) {
+    if (isNew) {
+      dispatch(reset());
+    } else {
       dispatch(getEntity(props.match.params.id));
     }
 

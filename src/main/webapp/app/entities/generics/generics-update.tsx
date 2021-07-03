@@ -27,11 +27,13 @@ export const GenericsUpdate = (props: RouteComponentProps<{ id: string }>) => {
   const updateSuccess = useAppSelector(state => state.generics.updateSuccess);
 
   const handleClose = () => {
-    props.history.push('/generics');
+    props.history.push('/generics' + props.location.search);
   };
 
   useEffect(() => {
-    if (!isNew) {
+    if (isNew) {
+      dispatch(reset());
+    } else {
       dispatch(getEntity(props.match.params.id));
     }
 

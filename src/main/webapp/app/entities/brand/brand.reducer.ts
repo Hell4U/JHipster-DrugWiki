@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { createAsyncThunk, isFulfilled, isPending, isRejected } from '@reduxjs/toolkit';
-import { loadMoreDataWhenScrolled, parseHeaderForLinks } from 'react-jhipster';
 
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
@@ -11,7 +10,6 @@ const initialState: EntityState<IBrand> = {
   errorMessage: null,
   entities: [],
   entity: defaultValue,
-  links: { next: 0 },
   updating: false,
   totalItems: 0,
   updateSuccess: false,
@@ -26,6 +24,13 @@ export const getEntities = createAsyncThunk('brand/fetch_entity_list', async ({ 
   return axios.get<IBrand[]>(requestUrl);
 });
 
+export const searchBrandEntities = (name: string) => {
+  const url = `api/search/search-Brand?name=${name}`;
+  const result = axios.get<IBrand>(url);
+  console.log('In reducer result', result);
+  return result;
+};
+
 export const getEntity = createAsyncThunk(
   'brand/fetch_entity',
   async (id: string | number) => {
@@ -38,7 +43,9 @@ export const getEntity = createAsyncThunk(
 export const createEntity = createAsyncThunk(
   'brand/create_entity',
   async (entity: IBrand, thunkAPI) => {
-    return axios.post<IBrand>(apiUrl, cleanEntity(entity));
+    const result = await axios.post<IBrand>(apiUrl, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
   },
   { serializeError: serializeAxiosError }
 );
@@ -46,7 +53,9 @@ export const createEntity = createAsyncThunk(
 export const updateEntity = createAsyncThunk(
   'brand/update_entity',
   async (entity: IBrand, thunkAPI) => {
-    return axios.put<IBrand>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    const result = await axios.put<IBrand>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
   },
   { serializeError: serializeAxiosError }
 );
@@ -54,7 +63,9 @@ export const updateEntity = createAsyncThunk(
 export const partialUpdateEntity = createAsyncThunk(
   'brand/partial_update_entity',
   async (entity: IBrand, thunkAPI) => {
-    return axios.patch<IBrand>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    const result = await axios.patch<IBrand>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
   },
   { serializeError: serializeAxiosError }
 );
@@ -63,7 +74,9 @@ export const deleteEntity = createAsyncThunk(
   'brand/delete_entity',
   async (id: string | number, thunkAPI) => {
     const requestUrl = `${apiUrl}/${id}`;
-    return await axios.delete<IBrand>(requestUrl);
+    const result = await axios.delete<IBrand>(requestUrl);
+    thunkAPI.dispatch(getEntities({}));
+    return result;
   },
   { serializeError: serializeAxiosError }
 );
@@ -85,13 +98,10 @@ export const BrandSlice = createEntitySlice({
         state.entity = {};
       })
       .addMatcher(isFulfilled(getEntities), (state, action) => {
-        const links = parseHeaderForLinks(action.payload.headers.link);
-
         return {
           ...state,
           loading: false,
-          links,
-          entities: loadMoreDataWhenScrolled(state.entities, action.payload.data, links),
+          entities: action.payload.data,
           totalItems: parseInt(action.payload.headers['x-total-count'], 10),
         };
       })

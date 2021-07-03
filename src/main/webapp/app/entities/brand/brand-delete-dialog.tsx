@@ -18,7 +18,7 @@ export const BrandDeleteDialog = (props: RouteComponentProps<{ id: string }>) =>
   const updateSuccess = useAppSelector(state => state.brand.updateSuccess);
 
   const handleClose = () => {
-    props.history.push('/brand');
+    props.history.push('/brand' + props.location.search);
   };
 
   useEffect(() => {

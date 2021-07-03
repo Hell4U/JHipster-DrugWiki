@@ -25,7 +25,7 @@
   "relationships": [],
   "entityTableName": "ingredients",
   "dto": "mapstruct",
-  "pagination": "infinite-scroll",
+  "pagination": "pagination",
   "service": "serviceImpl",
   "jpaMetamodelFiltering": true,
   "fluentMethods": true,

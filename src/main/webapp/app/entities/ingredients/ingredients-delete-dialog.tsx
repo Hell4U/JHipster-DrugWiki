@@ -18,7 +18,7 @@ export const IngredientsDeleteDialog = (props: RouteComponentProps<{ id: string 
   const updateSuccess = useAppSelector(state => state.ingredients.updateSuccess);
 
   const handleClose = () => {
-    props.history.push('/ingredients');
+    props.history.push('/ingredients' + props.location.search);
   };
 
   useEffect(() => {

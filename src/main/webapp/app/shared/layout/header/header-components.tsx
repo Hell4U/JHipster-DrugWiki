@@ -2,7 +2,9 @@ import React from 'react';
 
 import { NavItem, NavLink, NavbarBrand } from 'reactstrap';
 import { NavLink as Link } from 'react-router-dom';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SearchFnc from '../../../modules/Search/SearchFnc';
 
 import appConfig from 'app/config/constants';
 
@@ -16,9 +18,10 @@ export const Brand = props => (
   <NavbarBrand tag={Link} to="/" className="brand-logo">
     <BrandIcon />
     <span className="brand-title">Drugwiki</span>
-    <span className="navbar-version">{appConfig.VERSION}</span>
   </NavbarBrand>
 );
+
+const Search = props => <SearchFnc />;
 
 export const Home = props => (
   <NavItem>
@@ -28,3 +31,5 @@ export const Home = props => (
     </NavLink>
   </NavItem>
 );
+
+export default Search;

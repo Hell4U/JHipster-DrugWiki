@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { createAsyncThunk, isFulfilled, isPending, isRejected } from '@reduxjs/toolkit';
-import { loadMoreDataWhenScrolled, parseHeaderForLinks } from 'react-jhipster';
 
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
@@ -11,7 +10,6 @@ const initialState: EntityState<IIngredients> = {
   errorMessage: null,
   entities: [],
   entity: defaultValue,
-  links: { next: 0 },
   updating: false,
   totalItems: 0,
   updateSuccess: false,
@@ -38,7 +36,9 @@ export const getEntity = createAsyncThunk(
 export const createEntity = createAsyncThunk(
   'ingredients/create_entity',
   async (entity: IIngredients, thunkAPI) => {
-    return axios.post<IIngredients>(apiUrl, cleanEntity(entity));
+    const result = await axios.post<IIngredients>(apiUrl, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
   },
   { serializeError: serializeAxiosError }
 );
@@ -46,7 +46,9 @@ export const createEntity = createAsyncThunk(
 export const updateEntity = createAsyncThunk(
   'ingredients/update_entity',
   async (entity: IIngredients, thunkAPI) => {
-    return axios.put<IIngredients>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    const result = await axios.put<IIngredients>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
   },
   { serializeError: serializeAxiosError }
 );
@@ -54,7 +56,9 @@ export const updateEntity = createAsyncThunk(
 export const partialUpdateEntity = createAsyncThunk(
   'ingredients/partial_update_entity',
   async (entity: IIngredients, thunkAPI) => {
-    return axios.patch<IIngredients>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    const result = await axios.patch<IIngredients>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
   },
   { serializeError: serializeAxiosError }
 );
@@ -63,7 +67,9 @@ export const deleteEntity = createAsyncThunk(
   'ingredients/delete_entity',
   async (id: string | number, thunkAPI) => {
     const requestUrl = `${apiUrl}/${id}`;
-    return await axios.delete<IIngredients>(requestUrl);
+    const result = await axios.delete<IIngredients>(requestUrl);
+    thunkAPI.dispatch(getEntities({}));
+    return result;
   },
   { serializeError: serializeAxiosError }
 );
@@ -85,13 +91,10 @@ export const IngredientsSlice = createEntitySlice({
         state.entity = {};
       })
       .addMatcher(isFulfilled(getEntities), (state, action) => {
-        const links = parseHeaderForLinks(action.payload.headers.link);
-
         return {
           ...state,
           loading: false,
-          links,
-          entities: loadMoreDataWhenScrolled(state.entities, action.payload.data, links),
+          entities: action.payload.data,
           totalItems: parseInt(action.payload.headers['x-total-count'], 10),
         };
       })

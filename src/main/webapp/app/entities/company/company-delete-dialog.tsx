@@ -18,7 +18,7 @@ export const CompanyDeleteDialog = (props: RouteComponentProps<{ id: string }>) 
   const updateSuccess = useAppSelector(state => state.company.updateSuccess);
 
   const handleClose = () => {
-    props.history.push('/company');
+    props.history.push('/company' + props.location.search);
   };
 
   useEffect(() => {
