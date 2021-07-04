@@ -10,6 +10,7 @@ const initialState: EntityState<IBrand> = {
   errorMessage: null,
   entities: [],
   entity: defaultValue,
+  searchedEntity: [],
   updating: false,
   totalItems: 0,
   updateSuccess: false,
@@ -24,12 +25,10 @@ export const getEntities = createAsyncThunk('brand/fetch_entity_list', async ({ 
   return axios.get<IBrand[]>(requestUrl);
 });
 
-export const searchBrandEntities = (name: string) => {
+export const searchBrandEntities = createAsyncThunk('brand/search_entity', async (name: string) => {
   const url = `api/search/search-Brand?name=${name}`;
-  const result = axios.get<IBrand>(url);
-  console.log('In reducer result', result);
-  return result;
-};
+  return await axios.get<IBrand>(url);
+});
 
 export const getEntity = createAsyncThunk(
   'brand/fetch_entity',
@@ -96,6 +95,13 @@ export const BrandSlice = createEntitySlice({
         state.updating = false;
         state.updateSuccess = true;
         state.entity = {};
+      })
+      .addMatcher(isFulfilled(searchBrandEntities), (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          searchedEntity: action.payload.data,
+        };
       })
       .addMatcher(isFulfilled(getEntities), (state, action) => {
         return {

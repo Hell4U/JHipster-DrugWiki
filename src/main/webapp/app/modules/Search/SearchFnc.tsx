@@ -5,6 +5,7 @@ import { ListGroup, ListGroupItem } from 'reactstrap';
 import styles from './SearchFnc.module.scss';
 import { searchBrandEntities } from '../../entities/brand/brand.reducer';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { Link } from 'react-router-dom';
 
 const tmpData = [
   {
@@ -27,9 +28,10 @@ const tmpData = [
 let searchListRender = null;
 
 const SearchFnc = props => {
+  const { match } = props;
   const dispatch = useAppDispatch();
-  const [brandList, setBrandList] = useState([]);
-  const [searchList, setSearchList] = useState([]);
+  let brandList = useAppSelector(state => state.brand.searchedEntity);
+
   const [searchTerm, setSearchTerm] = useState('');
 
   const searchButtonHandler = event => {
@@ -45,34 +47,23 @@ const SearchFnc = props => {
   };
 
   const searchInputHandler = event => {
-    if (event.target.value.length >= 3) {
-      setSearchList(state => [...tmpData]);
-      setSearchTerm(event.target.value);
+    const name: string = event.target.value;
 
-      const data = searchBrandEntities(event.target.value);
-      console.log(
-        'From search function',
-        data.then(res => res.data)
-      );
-      // setBrandList(data);
-    } else {
-      setSearchList([]);
-      setSearchTerm('');
-    }
+    setSearchTerm(event.target.value);
+
+    dispatch(searchBrandEntities(name));
   };
 
   useEffect(() => {
     searchListRender = (
       <ListGroup className={styles['search-list-group']}>
-        {searchList
-          .filter(data => {
-            if (data.name.toLowerCase().includes(searchTerm.toLowerCase())) return data;
-          })
-          .map(data => (
+        {brandList.map(data => (
+          <Link to={`/guest/brand/${data.id}`}>
             <ListGroupItem className={styles['search-list']} key={data.id} onClick={searchListHandler.bind(this, data.id)}>
-              {data.name}
+              {data.bname}
             </ListGroupItem>
-          ))}
+          </Link>
+        ))}
       </ListGroup>
     );
   }, [searchTerm]);
@@ -85,7 +76,7 @@ const SearchFnc = props => {
           Search
         </Button>
       </InputGroup>
-      {searchListRender}
+      {searchTerm.length > 0 && searchListRender}
     </div>
   );
 };
