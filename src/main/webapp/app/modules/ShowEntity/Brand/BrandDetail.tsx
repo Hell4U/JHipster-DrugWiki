@@ -1,23 +1,20 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
 import { TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
 import { getEntity } from 'app/entities/brand/brand.reducer';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IBrandDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
-
-export const BrandDetail = (props: IBrandDetailProps) => {
+export const BrandDetail = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
+  const brandEntity = useAppSelector(state => state.brand.entity);
   useEffect(() => {
-    props.getEntity(props.match.params.id);
-  }, []);
+    dispatch(getEntity(props.match.params.id));
+  }, [brandEntity]);
 
-  const { brandEntity } = props;
-  console.log(brandEntity);
   return (
     <Row>
       <Col md="8">
@@ -53,13 +50,13 @@ export const BrandDetail = (props: IBrandDetailProps) => {
           <dd>{brandEntity.typeunit}</dd>
           <dt>Companyof Medicine</dt>
           <dd>{brandEntity.companyofMedicine ? brandEntity.companyofMedicine.cname : ''}</dd>
-          <dt>Generics</dt>
+          <dt>Genericsused</dt>
           <dd>
-            {brandEntity.generics
-              ? brandEntity.generics.map((val, i) => (
+            {brandEntity.genericsuseds
+              ? brandEntity.genericsuseds.map((val, i) => (
                   <span key={val.id}>
-                    <a>{val.id}</a>
-                    {brandEntity.generics && i === brandEntity.generics.length - 1 ? '' : ', '}
+                    <a>{val.gname}</a>
+                    {brandEntity.genericsuseds && i === brandEntity.genericsuseds.length - 1 ? '' : ', '}
                   </span>
                 ))
               : null}
@@ -70,13 +67,4 @@ export const BrandDetail = (props: IBrandDetailProps) => {
   );
 };
 
-const mapStateToProps = ({ brand }: IRootState) => ({
-  brandEntity: brand.entity,
-});
-
-const mapDispatchToProps = { getEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(BrandDetail);
+export default BrandDetail;

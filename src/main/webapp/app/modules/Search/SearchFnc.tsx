@@ -30,7 +30,7 @@ let searchListRender = null;
 const SearchFnc = props => {
   const { match } = props;
   const dispatch = useAppDispatch();
-  let brandList = useAppSelector(state => state.brand.searchedEntity);
+  const brandList = useAppSelector(state => state.brand.searchedEntity);
 
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -49,24 +49,23 @@ const SearchFnc = props => {
   const searchInputHandler = event => {
     const name: string = event.target.value;
 
-    setSearchTerm(event.target.value);
+    //setSearchTerm(event.target.value);
 
     dispatch(searchBrandEntities(name));
+    console.log(brandList);
   };
 
-  useEffect(() => {
-    searchListRender = (
-      <ListGroup className={styles['search-list-group']}>
-        {brandList.map(data => (
-          <Link to={`/guest/brand/${data.id}`}>
-            <ListGroupItem className={styles['search-list']} key={data.id} onClick={searchListHandler.bind(this, data.id)}>
-              {data.bname}
-            </ListGroupItem>
-          </Link>
-        ))}
-      </ListGroup>
-    );
-  }, [searchTerm]);
+  const searchListRender = (
+    <ListGroup className={styles['search-list-group']}>
+      {brandList.map(data => (
+        <Link to={`/guest/brand/${data.id}`}>
+          <ListGroupItem className={styles['search-list']} key={data.id} onClick={searchListHandler.bind(this, data.id)}>
+            {data.bname}
+          </ListGroupItem>
+        </Link>
+      ))}
+    </ListGroup>
+  );
 
   return (
     <div>
@@ -76,7 +75,7 @@ const SearchFnc = props => {
           Search
         </Button>
       </InputGroup>
-      {searchTerm.length > 0 && searchListRender}
+      {brandList.length > 0 && searchListRender}
     </div>
   );
 };
