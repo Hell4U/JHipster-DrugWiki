@@ -28,9 +28,8 @@ const tmpData = [
 let searchListRender = null;
 
 const SearchFnc = props => {
-  const { match } = props;
   const dispatch = useAppDispatch();
-  const brandList = useAppSelector(state => state.brand.searchedEntity);
+  let brandList = useAppSelector(state => state.brand.searchedEntity);
 
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -42,26 +41,24 @@ const SearchFnc = props => {
     if (event.keyCode === 13) console.log(event.target);
   };
 
-  const searchListHandler = (id, e) => {
-    console.log(id);
-  };
-
   const searchInputHandler = event => {
     const name: string = event.target.value;
 
-    //setSearchTerm(event.target.value);
+    setSearchTerm(name);
 
     dispatch(searchBrandEntities(name));
     console.log(brandList);
   };
 
+  const clearSearchTerm = () => {
+    setSearchTerm('');
+  };
+
   const searchListRender = (
     <ListGroup className={styles['search-list-group']}>
       {brandList.map(data => (
-        <Link to={`/guest/brand/${data.id}`}>
-          <ListGroupItem className={styles['search-list']} key={data.id} onClick={searchListHandler.bind(this, data.id)}>
-            {data.bname}
-          </ListGroupItem>
+        <Link to={`/guest/brand/${data.id}`} key={data.id} onClick={clearSearchTerm}>
+          <ListGroupItem className={styles['search-list']}>{data.bname}</ListGroupItem>
         </Link>
       ))}
     </ListGroup>
@@ -71,11 +68,13 @@ const SearchFnc = props => {
     <div>
       <InputGroup style={{ width: '32rem' }}>
         <Input className={styles['search-input']} placeholder="Search...." onChange={searchInputHandler} onKeyDown={searchEnterHandler} />
-        <Button color="primary" className="ml-1" onClick={searchButtonHandler}>
-          Search
-        </Button>
+        <Link to="/search/">
+          <Button color="primary" className="ml-1" onClick={searchButtonHandler}>
+            Search
+          </Button>
+        </Link>
       </InputGroup>
-      {brandList.length > 0 && searchListRender}
+      {searchTerm.length > 0 && brandList.length > 0 && searchListRender}
     </div>
   );
 };

@@ -13,7 +13,7 @@ export const BrandDetail = (props: RouteComponentProps<{ id: string }>) => {
   const brandEntity = useAppSelector(state => state.brand.entity);
   useEffect(() => {
     dispatch(getEntity(props.match.params.id));
-  }, [brandEntity]);
+  }, [props.match.params.id]);
 
   return (
     <Row>
