@@ -1,0 +1,98 @@
+application {
+  config {
+    applicationType monolith
+    authenticationType jwt
+    baseName Drugwiki
+    blueprints []
+    buildTool maven
+    cacheProvider no
+    clientFramework react
+    clientPackageManager npm
+    clientTheme none
+    databaseType sql
+    devDatabaseType mysql
+    dtoSuffix DTO
+    enableHibernateCache false
+    enableSwaggerCodegen false
+    enableTranslation false
+    jhiPrefix dgw
+    jwtSecretKey "MTVhYmE2MGI0NGZmZWJmMzRiNmMwZmViZmViYmQ2YmQwZDAwZWQ4YjgwYTQ1NWMyMmUzY2ViODA1NWQ1ZTRkZDM3ZGQ4NWY1NWJkZGJlZTNiNGQxZmExMWU4ZWFlNmQxYmRkZjE2MjJmYTZiOTMzOTYzNTg3MmZiNTlhY2RjZjk="
+    languages [en, fr]
+    messageBroker false
+    nativeLanguage en
+    otherModules []
+    packageName com.promition.drugwiki
+    prodDatabaseType mysql
+    reactive false
+    searchEngine elasticsearch
+    serverPort 8080
+    serviceDiscoveryType eureka
+    skipClient false
+    skipServer false
+    skipUserManagement false
+    testFrameworks []
+    websocket false
+    withAdminUi true
+  }
+
+  entities Brand, Company, Generics, Ingredients
+}
+
+entity Brand {
+  bname String required
+  price Double required
+  date LocalDate required
+  packageunit Double required
+  type BrandType required
+  typeunit TypeUnit required
+}
+entity Company {
+  cname String required
+  address String required
+  website String required
+  email String required
+  fax String required
+  phoneno String pattern(/(^[0-9]{10,10}$)/)
+}
+entity Generics {
+  gname String required
+  dosage Double required
+  dosageunit DosageUnit required
+}
+entity Ingredients {
+  iname String required
+  symptoms String required
+  sideeffects String required
+  cautions String required
+}
+enum BrandType {
+  Tablet,
+  Injection,
+  Capsule,
+  Syrup
+}
+enum TypeUnit {
+  PCS,
+  Miligram,
+  Gram,
+  Mililiter
+}
+enum DosageUnit {
+  Microgram,
+  Miligram,
+  Gram,
+  Mililiter
+}
+
+relationship ManyToOne {
+  Brand{companyofMedicine(cname) required} to Company
+  Generics{ingredientsused(iname) required} to Ingredients
+}
+relationship ManyToMany {
+  Brand{genericsused(gname) required} to Generics{id}
+}
+
+dto Brand, Company, Generics, Ingredients with mapstruct
+paginate Brand, Company, Generics, Ingredients with pagination
+service Brand, Company, Generics, Ingredients with serviceImpl
+filter Brand, Company, Generics, Ingredients

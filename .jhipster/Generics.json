@@ -1,0 +1,48 @@
+{
+  "name": "Generics",
+  "fields": [
+    {
+      "fieldName": "gname",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "dosage",
+      "fieldType": "Double",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "dosageunit",
+      "fieldType": "DosageUnit",
+      "fieldValues": "Microgram,Miligram,Gram,Mililiter",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "ingredients",
+      "otherEntityRelationshipName": "generics",
+      "relationshipValidateRules": "required",
+      "relationshipName": "ingredientsused",
+      "otherEntityField": "iname"
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "brand",
+      "otherEntityRelationshipName": "genericsused",
+      "relationshipName": "id",
+      "ownerSide": false
+    }
+  ],
+  "entityTableName": "generics",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Drugwiki"],
+  "changelogDate": "20210707022556"
+}
