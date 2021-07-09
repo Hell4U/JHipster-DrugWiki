@@ -135,25 +135,27 @@ const BrandShower = props => {
   return (
     <div className="Container px-md-5 mt-4">
       <h2 id="brand-heading" data-cy="BrandHeading">
-        Brands
-        <div className="d-flex justify-content-between">
-          <Button className="mr-2" color="info" onClick={handleSyncList} disabled={loading}>
-            <FontAwesomeIcon icon="sync" spin={loading} /> Refresh List
-          </Button>
-        </div>
+        <div className="display-4 text-center">Brand</div>
       </h2>
       <Row>
-        <Col sm="12">
+        <Col md="9">
           <Form onSubmit={startSearching}>
             <FormGroup>
               <InputGroup>
                 <Input type="text" name="search" defaultValue={search} onChange={handleSearch} placeholder="Search..." />
-                <Button md="2" color="danger" type="reset" className="input-group-addon text-white ml-5" onClick={clear}>
-                  <FontAwesomeIcon icon="trash" />
-                </Button>
               </InputGroup>
             </FormGroup>
           </Form>
+        </Col>
+        <Col md="2">
+          <Button className="" color="info" onClick={handleSyncList} disabled={loading}>
+            <FontAwesomeIcon icon="sync" spin={loading} /> Refresh List
+          </Button>
+        </Col>
+        <Col md="1">
+          <Button color="danger" type="reset" className="input-group-addon text-white" onClick={clear}>
+            <FontAwesomeIcon icon="trash" />
+          </Button>
         </Col>
       </Row>
       <Row>
