@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody, CardTitle, CardSubtitle, CardText, CardImg } from 'reactstrap';
 import InfiniteScroll from 'react-infinite-scroller';
-import { getEntities, reset } from 'app/entities/brand/brand.reducer';
+import { getEntities, searchBrandEntities, reset } from 'app/entities/brand/brand.reducer';
 import Capsule from 'app/Images/capsule.png';
 import Injection from 'app/Images/injection.png';
 import Tablet from 'app/Images/tablet.png';
@@ -14,7 +14,7 @@ import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.cons
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { Translate, TextFormat, getSortState, JhiPagination, JhiItemCount } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Col, Row, Table,Container } from 'reactstrap';
+import { Button, Form, FormGroup, Input, InputGroup, Col, Row, Table, Container } from 'reactstrap';
 
 const imageType = {
   Capsule,
@@ -26,6 +26,7 @@ const imageType = {
 const BrandShower = props => {
   const dispatch = useAppDispatch();
 
+  const [search, setSearch] = useState('');
   const [paginationState, setPaginationState] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE, 'id'), props.location.search)
   );
@@ -35,14 +36,54 @@ const BrandShower = props => {
   const totalItems = useAppSelector(state => state.brand.totalItems);
 
   const getAllEntities = () => {
-    dispatch(
-      getEntities({
-        page: paginationState.activePage - 1,
-        size: paginationState.itemsPerPage,
-        sort: `${paginationState.sort},${paginationState.order}`,
-      })
-    );
+    if (search) {
+      dispatch(
+        searchBrandEntities({
+          query: search,
+          page: paginationState.activePage - 1,
+          size: paginationState.itemsPerPage,
+          sort: `${paginationState.sort},${paginationState.order}`,
+        })
+      );
+    } else {
+      dispatch(
+        getEntities({
+          page: paginationState.activePage - 1,
+          size: paginationState.itemsPerPage,
+          sort: `${paginationState.sort},${paginationState.order}`,
+        })
+      );
+    }
   };
+
+  const startSearching = e => {
+    e.preventDefault();
+    if (search) {
+      setPaginationState({
+        ...paginationState,
+        activePage: 1,
+      });
+      dispatch(
+        searchBrandEntities({
+          query: search,
+          page: paginationState.activePage - 1,
+          size: paginationState.itemsPerPage,
+          sort: `${paginationState.sort},${paginationState.order}`,
+        })
+      );
+    }
+  };
+
+  const clear = () => {
+    setSearch('');
+    setPaginationState({
+      ...paginationState,
+      activePage: 1,
+    });
+    dispatch(getEntities({}));
+  };
+
+  const handleSearch = event => setSearch(event.target.value);
 
   const sortEntities = () => {
     getAllEntities();
@@ -54,7 +95,7 @@ const BrandShower = props => {
 
   useEffect(() => {
     sortEntities();
-  }, [paginationState.activePage, paginationState.order, paginationState.sort]);
+  }, [paginationState.activePage, paginationState.order, paginationState.sort, search]);
 
   useEffect(() => {
     const params = new URLSearchParams(props.location.search);
@@ -95,13 +136,27 @@ const BrandShower = props => {
     <div className="Container px-md-5 mt-4">
       <h2 id="brand-heading" data-cy="BrandHeading">
         Brands
-        <div className="d-flex justify-content-end">
+        <div className="d-flex justify-content-between">
           <Button className="mr-2" color="info" onClick={handleSyncList} disabled={loading}>
             <FontAwesomeIcon icon="sync" spin={loading} /> Refresh List
           </Button>
         </div>
       </h2>
-      <Row >
+      <Row>
+        <Col sm="12">
+          <Form onSubmit={startSearching}>
+            <FormGroup>
+              <InputGroup>
+                <Input type="text" name="search" defaultValue={search} onChange={handleSearch} placeholder="Search..." />
+                <Button md="2" color="danger" type="reset" className="input-group-addon text-white ml-5" onClick={clear}>
+                  <FontAwesomeIcon icon="trash" />
+                </Button>
+              </InputGroup>
+            </FormGroup>
+          </Form>
+        </Col>
+      </Row>
+      <Row>
         {brandList && brandList.length > 0 ? (
           brandList.map((elm, idx) => {
             return (

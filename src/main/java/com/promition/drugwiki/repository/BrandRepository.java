@@ -27,4 +27,6 @@ public interface BrandRepository extends JpaRepository<Brand, Long>, JpaSpecific
     Optional<Brand> findOneWithEagerRelationships(@Param("id") Long id);
 
     List<Brand> findAllByBnameContains(String name);
+
+    Page<Brand> findAllByBnameContains(String name, Pageable pageable);
 }

@@ -21,8 +21,6 @@ export const Brand = props => (
   </NavbarBrand>
 );
 
-const Search = props => <SearchFnc />;
-
 export const Home = props => (
   <NavItem>
     <NavLink tag={Link} to="/" className="d-flex align-items-center">
@@ -31,5 +29,3 @@ export const Home = props => (
     </NavLink>
   </NavItem>
 );
-
-export default Search;

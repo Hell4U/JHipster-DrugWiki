@@ -51,16 +51,7 @@ export const BrandDetail = (props: RouteComponentProps<{ id: string }>) => {
           <dt>Companyof Medicine</dt>
           <dd>{brandEntity.companyofMedicine ? brandEntity.companyofMedicine.cname : ''}</dd>
           <dt>Genericsused</dt>
-          <dd>
-            {brandEntity.genericsuseds
-              ? brandEntity.genericsuseds.map((val, i) => (
-                  <span key={val.id}>
-                    <a>{val.gname}</a>
-                    {brandEntity.genericsuseds && i === brandEntity.genericsuseds.length - 1 ? '' : ', '}
-                  </span>
-                ))
-              : null}
-          </dd>
+          <dd>{brandEntity.genericsuseds ? brandEntity.genericsuseds.map((val, i) => <div key={val.id}>{val.gname}</div>) : null}</dd>
         </dl>
       </Col>
     </Row>
