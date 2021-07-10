@@ -7,6 +7,9 @@ import com.promition.drugwiki.domain.Ingredients;
 import com.promition.drugwiki.service.SearchService;
 import com.promition.drugwiki.service.criteria.BrandCriteria;
 import com.promition.drugwiki.service.dto.BrandDTO;
+import com.promition.drugwiki.service.SearchService;
+import com.promition.drugwiki.service.criteria.CompanyCriteria;
+import com.promition.drugwiki.service.dto.CompanyDTO;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +71,14 @@ public class SearchResource {
     public ResponseEntity<List<Brand>> pagableBrandSearch(String name, BrandCriteria criteria, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Brand> pages = searchService.pageableBrandSearch(name, criteria, pageable);
+        pages.getSort();
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), pages);
+        return ResponseEntity.ok().headers(headers).body(pages.getContent());
+    }
+    @GetMapping("/Company")
+    public ResponseEntity<List<Company>> pagableCompanySearch(String name, CompanyCriteria criteria, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Company> pages = searchService.pageableCompanySearch(name, criteria, pageable);
         pages.getSort();
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), pages);
         return ResponseEntity.ok().headers(headers).body(pages.getContent());

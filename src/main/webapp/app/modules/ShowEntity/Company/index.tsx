@@ -1,25 +1,18 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
-import PageNotFound from 'app/shared/error/page-not-found';
-import { withRouter } from 'react-router-dom';
-import { RouteComponentProps } from 'react-router';
-import companyDetail from 'app/entities/company/company-detail';
-type PathParamsType = {
-  param1: string;
-};
+import { Switch } from 'react-router-dom';
 
-// Your component own properties
-type PropsType = RouteComponentProps<PathParamsType> & {
-  someString: string;
-};
-class Company extends React.Component<PropsType> {
-  render() {
-    return (
-      <>
-        <div>company</div>
-      </>
-    );
-  }
-}
-export default withRouter(Company);
+import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
+
+import CompanyShower from './CompanyShower';
+import CompanyDetail from './CompanyDetail';
+
+const Routes = ({ match }) => (
+  <>
+    <Switch>
+      <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={CompanyDetail} />
+      <ErrorBoundaryRoute path={match.url} component={CompanyShower} />
+    </Switch>
+  </>
+);
+
+export default Routes;

@@ -9,6 +9,9 @@ import com.promition.drugwiki.repository.IngredientsRepository;
 import com.promition.drugwiki.service.criteria.BrandCriteria;
 import com.promition.drugwiki.service.dto.BrandDTO;
 import com.promition.drugwiki.service.mapper.BrandMapper;
+import com.promition.drugwiki.service.criteria.CompanyCriteria;
+import com.promition.drugwiki.service.dto.CompanyDTO;
+import com.promition.drugwiki.service.mapper.CompanyMapper;
 import java.util.List;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.metamodel.SingularAttribute;
@@ -27,6 +30,9 @@ public class SearchService {
 
     @Autowired
     private BrandMapper brandMapper;
+
+    @Autowired
+    private CompanyMapper companyMapper;
 
     @Autowired
     private BrandRepository brandRepository;
@@ -60,5 +66,8 @@ public class SearchService {
 
     public Page<Brand> pageableBrandSearch(String name, BrandCriteria criteria, Pageable pageable) {
         return brandRepository.findAllByBnameContains(name, pageable);
+    }
+    public Page<Company> pageableCompanySearch(String name, CompanyCriteria criteria, Pageable pageable) {
+        return companyRepository.findAllByCnameContains(name, pageable);
     }
 }
