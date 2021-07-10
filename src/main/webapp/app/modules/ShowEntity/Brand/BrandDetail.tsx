@@ -40,7 +40,7 @@ export const BrandDetail = (props: RouteComponentProps<{ id: string }>) => {
               <td className="text-center">{packageunit}</td>
               <td className="text-center">{type}</td>
               <td className="text-center">{typeunit}</td>
-              <td className="text-center">{companyofMedicine ? companyofMedicine.cname : 'No company has been assigned.'}</td>
+              <td className="text-center"><Link to={`/guest/company/${companyofMedicine ? companyofMedicine.id : ''}`}>{companyofMedicine ? companyofMedicine.cname : 'No company has been assigned.'}</Link></td>
               <td className="text-center">
                 {genericsuseds ? (
                   genericsuseds.map(data => {

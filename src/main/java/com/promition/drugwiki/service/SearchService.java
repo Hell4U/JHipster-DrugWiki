@@ -2,6 +2,7 @@ package com.promition.drugwiki.service;
 
 import com.promition.drugwiki.domain.*;
 import com.promition.drugwiki.domain.enumeration.BrandType;
+import com.promition.drugwiki.domain.enumeration.DosageUnit;
 import com.promition.drugwiki.repository.BrandRepository;
 import com.promition.drugwiki.repository.CompanyRepository;
 import com.promition.drugwiki.repository.GenericsRepository;
@@ -12,6 +13,9 @@ import com.promition.drugwiki.service.mapper.BrandMapper;
 import com.promition.drugwiki.service.criteria.CompanyCriteria;
 import com.promition.drugwiki.service.dto.CompanyDTO;
 import com.promition.drugwiki.service.mapper.CompanyMapper;
+import com.promition.drugwiki.service.criteria.GenericsCriteria;
+import com.promition.drugwiki.service.dto.GenericsDTO;
+import com.promition.drugwiki.service.mapper.GenericsMapper;
 import java.util.List;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.metamodel.SingularAttribute;
@@ -33,6 +37,9 @@ public class SearchService {
 
     @Autowired
     private CompanyMapper companyMapper;
+
+    @Autowired
+    private GenericsMapper genericsMapper;
 
     @Autowired
     private BrandRepository brandRepository;
@@ -69,5 +76,8 @@ public class SearchService {
     }
     public Page<Company> pageableCompanySearch(String name, CompanyCriteria criteria, Pageable pageable) {
         return companyRepository.findAllByCnameContains(name, pageable);
+    }
+    public Page<Generics> pageableGenericsSearch(String name, GenericsCriteria criteria, Pageable pageable) {
+        return genericsRepository.findAllByGnameContains(name, pageable);
     }
 }
