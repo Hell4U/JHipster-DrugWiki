@@ -33,12 +33,12 @@ const Routes = () => {
       <Switch>
         <ErrorBoundaryRoute path="/login" component={Login} />
         <ErrorBoundaryRoute path="/logout" component={Logout} />
-        <ErrorBoundaryRoute path="/account/register" component={Register} />
+        {/* <ErrorBoundaryRoute path="/account/register" component={Register} />
         <ErrorBoundaryRoute path="/account/activate/:key?" component={Activate} />
         <ErrorBoundaryRoute path="/account/reset/request" component={PasswordResetInit} />
-        <ErrorBoundaryRoute path="/account/reset/finish/:key?" component={PasswordResetFinish} />
+        <ErrorBoundaryRoute path="/account/reset/finish/:key?" component={PasswordResetFinish} /> */}
         <PrivateRoute path="/admin" component={Admin} hasAnyAuthorities={[AUTHORITIES.ADMIN]} />
-        <PrivateRoute path="/account" component={Account} hasAnyAuthorities={[AUTHORITIES.ADMIN]} />
+        {/* <PrivateRoute path="/account" component={Account} hasAnyAuthorities={[AUTHORITIES.ADMIN]} /> */}
         <ErrorBoundaryRoute path="/" exact component={HomeNew} />
         <ErrorBoundaryRoute path="/guest" component={ShowEntity} />
         <PrivateRoute path="/" component={Entities} hasAnyAuthorities={[AUTHORITIES.ADMIN]} />
