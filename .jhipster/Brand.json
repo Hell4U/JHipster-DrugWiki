@@ -1,0 +1,66 @@
+{
+  "name": "Brand",
+  "fields": [
+    {
+      "fieldName": "bname",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "price",
+      "fieldType": "Double",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "date",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "packageunit",
+      "fieldType": "Double",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "BrandType",
+      "fieldValues": "Tablet,Injection,Capsule,Syrup",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "typeunit",
+      "fieldType": "TypeUnit",
+      "fieldValues": "PCS,Miligram,Gram,Mililiter",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "company",
+      "otherEntityRelationshipName": "brand",
+      "relationshipValidateRules": "required",
+      "relationshipName": "companyofMedicine",
+      "otherEntityField": "cname"
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "generics",
+      "otherEntityRelationshipName": "id",
+      "relationshipValidateRules": "required",
+      "relationshipName": "genericsused",
+      "otherEntityField": "gname",
+      "ownerSide": true
+    }
+  ],
+  "entityTableName": "brand",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["Drugwiki"],
+  "changelogDate": "20210618031302"
+}

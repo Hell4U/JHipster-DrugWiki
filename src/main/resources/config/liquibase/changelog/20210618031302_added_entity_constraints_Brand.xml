@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity Brand.
+    -->
+    <changeSet id="20210618031302-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="companyof_medicine_id"
+                                 baseTableName="brand"
+                                 constraintName="fk_brand__companyof_medicine_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="company"/>
+
+        <addForeignKeyConstraint baseColumnNames="brand_id"
+                                 baseTableName="rel_brand__genericsused"
+                                 constraintName="fk_rel_brand__genericsused__brand_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="brand"/>
+
+        <addForeignKeyConstraint baseColumnNames="genericsused_id"
+                                 baseTableName="rel_brand__genericsused"
+                                 constraintName="fk_rel_brand__genericsused__genericsused_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="generics"/>
+    </changeSet>
+</databaseChangeLog>
