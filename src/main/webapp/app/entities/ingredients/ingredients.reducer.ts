@@ -11,6 +11,7 @@ const initialState: EntityState<IIngredients> = {
   entities: [],
   entity: defaultValue,
   updating: false,
+  searchedEntity: [],
   totalItems: 0,
   updateSuccess: false,
 };
@@ -23,6 +24,14 @@ export const getEntities = createAsyncThunk('ingredients/fetch_entity_list', asy
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}&` : '?'}cacheBuster=${new Date().getTime()}`;
   return axios.get<IIngredients[]>(requestUrl);
 });
+
+export const searchIngredientsEntities = createAsyncThunk(
+  'ingredients/search_entity',
+  async ({ query, page, size, sort }: IQueryParams) => {
+    const url = `api/search/Ingredients?name=${query}&page=${page}&size=${size}&sort=${sort}`;
+    return await axios.get<IIngredients[]>(url);
+  }
+);
 
 export const getEntity = createAsyncThunk(
   'ingredients/fetch_entity',
@@ -90,7 +99,7 @@ export const IngredientsSlice = createEntitySlice({
         state.updateSuccess = true;
         state.entity = {};
       })
-      .addMatcher(isFulfilled(getEntities), (state, action) => {
+      .addMatcher(isFulfilled(getEntities, searchIngredientsEntities), (state, action) => {
         return {
           ...state,
           loading: false,
@@ -104,7 +113,7 @@ export const IngredientsSlice = createEntitySlice({
         state.updateSuccess = true;
         state.entity = action.payload.data;
       })
-      .addMatcher(isPending(getEntities, getEntity), state => {
+      .addMatcher(isPending(getEntities, getEntity, searchIngredientsEntities), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.loading = true;

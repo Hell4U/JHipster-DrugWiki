@@ -29,6 +29,7 @@ describe('Entities reducer tests', () => {
     loading: false,
     errorMessage: null,
     entities: [],
+    searchedEntity: [],
     entity: defaultValue,
     totalItems: 0,
     updating: false,

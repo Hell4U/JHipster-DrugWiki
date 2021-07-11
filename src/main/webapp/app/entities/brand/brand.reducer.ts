@@ -10,6 +10,7 @@ const initialState: EntityState<IBrand> = {
   errorMessage: null,
   entities: [],
   entity: defaultValue,
+  searchedEntity: [],
   updating: false,
   totalItems: 0,
   updateSuccess: false,
@@ -22,6 +23,11 @@ const apiUrl = 'api/brands';
 export const getEntities = createAsyncThunk('brand/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}&` : '?'}cacheBuster=${new Date().getTime()}`;
   return axios.get<IBrand[]>(requestUrl);
+});
+
+export const searchBrandEntities = createAsyncThunk('brand/search_entity', async ({ query, page, size, sort }: IQueryParams) => {
+  const url = `api/search/Brand?name=${query}&page=${page}&size=${size}&sort=${sort}`;
+  return await axios.get<IBrand[]>(url);
 });
 
 export const getEntity = createAsyncThunk(
@@ -90,7 +96,7 @@ export const BrandSlice = createEntitySlice({
         state.updateSuccess = true;
         state.entity = {};
       })
-      .addMatcher(isFulfilled(getEntities), (state, action) => {
+      .addMatcher(isFulfilled(getEntities, searchBrandEntities), (state, action) => {
         return {
           ...state,
           loading: false,
@@ -104,7 +110,7 @@ export const BrandSlice = createEntitySlice({
         state.updateSuccess = true;
         state.entity = action.payload.data;
       })
-      .addMatcher(isPending(getEntities, getEntity), state => {
+      .addMatcher(isPending(getEntities, getEntity, searchBrandEntities), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.loading = true;
