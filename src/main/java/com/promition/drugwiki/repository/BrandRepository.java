@@ -25,4 +25,8 @@ public interface BrandRepository extends JpaRepository<Brand, Long>, JpaSpecific
 
     @Query("select brand from Brand brand left join fetch brand.genericsuseds where brand.id =:id")
     Optional<Brand> findOneWithEagerRelationships(@Param("id") Long id);
+
+    List<Brand> findAllByBnameContains(String name);
+
+    Page<Brand> findAllByBnameContains(String name, Pageable pageable);
 }

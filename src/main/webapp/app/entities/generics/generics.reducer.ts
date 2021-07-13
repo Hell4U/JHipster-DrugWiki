@@ -9,6 +9,7 @@ const initialState: EntityState<IGenerics> = {
   loading: false,
   errorMessage: null,
   entities: [],
+  searchedEntity: [],
   entity: defaultValue,
   updating: false,
   totalItems: 0,
@@ -22,6 +23,11 @@ const apiUrl = 'api/generics';
 export const getEntities = createAsyncThunk('generics/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}&` : '?'}cacheBuster=${new Date().getTime()}`;
   return axios.get<IGenerics[]>(requestUrl);
+});
+
+export const searchGenericsEntities = createAsyncThunk('generics/search_entity', async ({ query, page, size, sort }: IQueryParams) => {
+  const url = `api/search/Generics?name=${query}&page=${page}&size=${size}&sort=${sort}`;
+  return await axios.get<IGenerics[]>(url);
 });
 
 export const getEntity = createAsyncThunk(
@@ -90,7 +96,7 @@ export const GenericsSlice = createEntitySlice({
         state.updateSuccess = true;
         state.entity = {};
       })
-      .addMatcher(isFulfilled(getEntities), (state, action) => {
+      .addMatcher(isFulfilled(getEntities, searchGenericsEntities), (state, action) => {
         return {
           ...state,
           loading: false,
@@ -104,7 +110,7 @@ export const GenericsSlice = createEntitySlice({
         state.updateSuccess = true;
         state.entity = action.payload.data;
       })
-      .addMatcher(isPending(getEntities, getEntity), state => {
+      .addMatcher(isPending(getEntities, getEntity, searchGenericsEntities), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.loading = true;
