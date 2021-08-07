@@ -50,7 +50,7 @@ export const BrandDetail = (props: RouteComponentProps<{ id: string }>) => {
                   genericsuseds.map(data => {
                     return (
                       <>
-                        <Link to={`/guest/generic/${data.id}`}>{data.gname}</Link>
+                        <Link to={`/guest/generics/${data.id}`}>{data.gname}</Link>
                         <br></br>
                       </>
                     );
