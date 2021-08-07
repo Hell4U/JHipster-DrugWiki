@@ -82,4 +82,8 @@ public class SearchService {
     public Page<Generics> pageableGenericsSearch(String name, GenericsCriteria criteria, Pageable pageable) {
         return genericsRepository.findAllByGnameContains(name, pageable);
     }
+
+    public List<Brand> searchBrandWithGeneric() {
+        return brandRepository.findAll();
+    }
 }

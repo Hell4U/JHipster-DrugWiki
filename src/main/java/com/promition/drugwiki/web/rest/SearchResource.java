@@ -22,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -93,5 +94,10 @@ public class SearchResource {
         pages.getSort();
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), pages);
         return ResponseEntity.ok().headers(headers).body(pages.getContent());
+    }
+
+    @GetMapping("/generic-used")
+    public List<Brand> genericUsedInBrand() {
+        return searchService.searchBrandWithGeneric();
     }
 }

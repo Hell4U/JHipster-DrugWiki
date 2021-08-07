@@ -1,6 +1,7 @@
 package com.promition.drugwiki.repository;
 
 import com.promition.drugwiki.domain.Brand;
+import com.promition.drugwiki.domain.Generics;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
